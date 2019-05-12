@@ -1,7 +1,15 @@
 package com.example.todo
 
+import android.app.Activity
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.AlarmClock.EXTRA_MESSAGE
+import android.util.Log
+import android.view.View
+import android.widget.EditText
+import kotlinx.android.synthetic.main.activity_edit_to_do.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -10,8 +18,21 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        main_input_textview.setOnClickListener {
-            setContentView(R.layout.activity_input_todo)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, receiveIntent: Intent?) {
+        super.onActivityResult(requestCode, resultCode, receiveIntent)
+
+        //if (resultCode == Activity.RESULT_OK && requestCode == RESULT_SUBACTIVITY)
+        if (receiveIntent != null) {
+            val resTodo = receiveIntent.extras.getString("key")
+            main_textview_1.text = resTodo
         }
     }
+
+    fun transEditToDo(view: View?) {
+        var intent = Intent(this, EditToDO::class.java)
+        startActivityForResult(intent, 1000)
+    }
+
 }
