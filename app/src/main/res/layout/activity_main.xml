@@ -10,7 +10,7 @@
     <TextView
             android:layout_width="0dp"
             android:layout_height="41dp"
-            android:text="予定を入力"
+            android:text="@string/input_plan"
             android:background="@drawable/frame_style"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -27,6 +27,6 @@
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp" android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            android:text="textView"/>
+            android:gravity="center_vertical" android:onClick="transEditToDo"/>
 
 </android.support.constraint.ConstraintLayout>

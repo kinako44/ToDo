@@ -9,13 +9,13 @@
 
     <EditText
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
+            android:layout_height="121dp"
             android:ems="10"
             android:id="@+id/todo_editText" android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="8dp"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="32dp"
-            app:layout_constraintTop_toTopOf="parent" android:hint="予定を入力"/>
+            app:layout_constraintTop_toTopOf="parent" android:hint="@string/input_plan" android:inputType="text"
+            android:gravity="left"/>
     <Button
             android:text="Button"
             android:layout_width="wrap_content"

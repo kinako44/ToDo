@@ -14,6 +14,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
+    private val mainToEdit: Int = 1000
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -24,15 +26,19 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, receiveIntent)
 
         //if (resultCode == Activity.RESULT_OK && requestCode == RESULT_SUBACTIVITY)
-        if (receiveIntent != null) {
+        if (resultCode == Activity.RESULT_OK &&
+            requestCode == mainToEdit &&
+            receiveIntent != null) {
             val resTodo = receiveIntent.extras.getString("key")
             main_textview_1.text = resTodo
         }
     }
 
+    // onClick
     fun transEditToDo(view: View?) {
         var intent = Intent(this, EditToDO::class.java)
-        startActivityForResult(intent, 1000)
+        intent.putExtra(EXTRA_MESSAGE, main_textview_1.text.toString())
+        startActivityForResult(intent, mainToEdit)
     }
 
 }
