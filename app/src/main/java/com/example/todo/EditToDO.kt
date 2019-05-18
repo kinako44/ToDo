@@ -17,26 +17,25 @@ class EditToDO : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_to_do)
 
-        val receiveIntent: Intent = intent
-        val plan: String = receiveIntent.extras.getString(EXTRA_MESSAGE)
-        todo_editText.setText(plan)
-    }
+        val receiveIntent = intent
 
-
-
-    fun transMainActivity(view: View?) {
-        val intent = Intent()
-        if (todo_editText.text != null) {
-            val message: String = todo_editText.text.toString()
-            intent.putExtra("key", message)
-
-            todo_editText.setText("")
-            //Log.d("fun", message)
+        if (receiveIntent.extras?.getString("key2") != null) {
+            val enteredTodo = receiveIntent.extras.getString("key2").toString()
+            todo_editText.setText(enteredTodo)
         }
 
 
-        setResult(RESULT_OK, intent)
-        finish()
+        save_btn.setOnClickListener {
+            val sendIntent = Intent()
+            if (todo_editText.text != null) {
+                sendIntent.putExtra("key1", todo_editText.text.toString())
+                todo_editText.setText("")
+            }
+
+            setResult(Activity.RESULT_OK, sendIntent)
+            finish()
+        }
     }
+
 
 }
