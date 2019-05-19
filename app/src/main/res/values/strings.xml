@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">ToDo</string>
-    <string name="input_plan">予定を入力</string>
+    <string name="input_plan">タスクを入力</string>
     <string name="save_todo">保存</string>
 </resources>

@@ -24,7 +24,6 @@ class EditToDO : AppCompatActivity() {
             todo_editText.setText(enteredTodo)
         }
 
-
         save_btn.setOnClickListener {
             val sendIntent = Intent()
             if (todo_editText.text != null) {

@@ -7,22 +7,21 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
-    <TextView
+    <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true" app:srcCompat="@drawable/ic_add_black_24dp"
+            android:id="@+id/fab"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent" app:backgroundTint="@color/colorPrimary"
+            android:focusable="auto"/>
+    <android.support.v7.widget.RecyclerView
             android:layout_width="0dp"
-            android:layout_height="35dp" android:id="@+id/plan_input"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/todo_list" android:gravity="center_vertical"
-            android:background="@drawable/frame_style"
-            android:textSize="18sp" android:hint="@string/input_plan"/>
-    <ListView
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="8dp" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_height="0dp" android:layout_marginTop="8dp"
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="8dp" android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/plan_input"
-            android:id="@+id/todo_list"/>
+            android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
+            android:id="@+id/recycler"/>
 
 </android.support.constraint.ConstraintLayout>
