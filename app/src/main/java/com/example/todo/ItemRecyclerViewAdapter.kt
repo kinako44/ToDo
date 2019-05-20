@@ -70,6 +70,7 @@ class ItemRecyclerViewAdapter(
             } else {
                 holder.todoBody.setTextColor(Color.DKGRAY)
                 paint.flags = 0
+                paint.isAntiAlias = false
             }
         }
         // RecycleViewを再生成したときにチェック済みのものの見た目を変更する

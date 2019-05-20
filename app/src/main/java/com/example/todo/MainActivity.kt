@@ -109,6 +109,8 @@ class MainActivity : AppCompatActivity() {
             data != null) {
 
             val todoData = data.extras.getString("key1").toString()
+            if (todoData == "") return
+
             adapter.addItem(todoData, false)
 
             // realmへの保存

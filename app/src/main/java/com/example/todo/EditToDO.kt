@@ -26,6 +26,7 @@ class EditToDO : AppCompatActivity() {
 
         save_btn.setOnClickListener {
             val sendIntent = Intent()
+
             if (todo_editText.text != null) {
                 sendIntent.putExtra("key1", todo_editText.text.toString())
                 todo_editText.setText("")
