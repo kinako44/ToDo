@@ -10,25 +10,43 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
+import io.realm.RealmResults
 import kotlinx.android.synthetic.main.item.view.*
 import java.util.ArrayList
 
 class ItemRecyclerViewAdapter(
-    private val mItems: ArrayList<String>,
+    val mItems: ArrayList<String>,
+    val mIsChecked: ArrayList<Boolean>,
     private val mContext: Context
 ) : RecyclerView.Adapter<ItemRecyclerViewAdapter.ViewHolder>() {
 
     override fun getItemCount(): Int = mItems.size
 
-    fun addItem(item: String) {
+    fun addItem(item: String, check: Boolean) {
         mItems.add(item)
+        mIsChecked.add(check)
         notifyDataSetChanged()
     }
 
-    private fun removeItem(position: Int) {
+    fun clearAllItems() {
+        mItems.clear()
+        mIsChecked.clear()
+    }
+
+    fun removeItem(position: Int) {
         mItems.removeAt(position)
+        mIsChecked.removeAt(position)
         notifyItemRemoved(position)
         notifyDataSetChanged()
+    }
+
+    fun exchangeItem(position1: Int, position2: Int) {
+        val tmpItem = mItems.removeAt(position1)
+        mItems.add(position2, tmpItem)
+        val tmpIsChecked = mIsChecked.removeAt(position1)
+        mIsChecked.add(position2, tmpIsChecked)
+
+        //notifyItemMoved(position1, position2)
     }
 
 
@@ -39,9 +57,9 @@ class ItemRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.todoBody.text = mItems[position]
+        holder.check.isChecked = mIsChecked[position]
 
-        // CheckBox用クリックリスナーの実装
-        holder.check.setOnClickListener {
+        fun switchTextViewLook() {
             val paint: TextPaint = holder.todoBody.paint
 
             if (holder.check.isChecked) {
@@ -53,6 +71,14 @@ class ItemRecyclerViewAdapter(
                 holder.todoBody.setTextColor(Color.DKGRAY)
                 paint.flags = 0
             }
+        }
+        // RecycleViewを再生成したときにチェック済みのものの見た目を変更する
+        switchTextViewLook()
+
+        // CheckBox用クリックリスナーの実装
+        holder.check.setOnClickListener {
+            mIsChecked[position] = !mIsChecked[position]
+            switchTextViewLook()
         }
 
     }

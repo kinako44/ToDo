@@ -13,8 +13,8 @@ class DatabaseController : Application() {
         super.onCreate()
         Realm.init(this)
 
-        //val config = RealmConfiguration.Builder().build()
-        //Realm.setDefaultConfiguration(config)
+        val config = RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build()
+        Realm.setDefaultConfiguration(config)
     }
 }
 
@@ -22,4 +22,6 @@ open class ToDoRealm : RealmObject() {
 
     @Required
     var plan: String = ""
+    var isChecked: Boolean = false
+
 }

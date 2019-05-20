@@ -20,7 +20,7 @@ class EditToDO : AppCompatActivity() {
         val receiveIntent = intent
 
         if (receiveIntent.extras?.getString("key2") != null) {
-            val enteredTodo = receiveIntent.extras.getString("key2").toString()
+            val enteredTodo = receiveIntent.extras.getString("key2")
             todo_editText.setText(enteredTodo)
         }
 
