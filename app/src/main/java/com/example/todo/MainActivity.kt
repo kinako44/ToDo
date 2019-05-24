@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
                 val fromPosition = viewHolder.adapterPosition
                 val toPosition = target.adapterPosition
 
-                adapter.exchangeItem(fromPosition, toPosition)
+                adapter.insertItem(fromPosition, toPosition)
                 recycler.adapter?.notifyItemMoved(fromPosition, toPosition)
 
                 return true
@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        refreshRealmDB()    // Pauseの度にDBを作り直すのは負荷が大きい？
+        refreshRealmDB()    // insert, deleteしたときにDBを更新する　←　修正要
     }
 
 
@@ -109,7 +109,7 @@ class MainActivity : AppCompatActivity() {
             data != null) {
 
             val todoData = data.extras.getString("key1").toString()
-            if (todoData == "") return
+            if (todoData == "") return      // 入力がブランクのときの処理をここでする
 
             adapter.addItem(todoData, false)
 
@@ -123,6 +123,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Realmデータベースを新しく作り直す
+    // insertとdeleteした上で順番を保持できるように改良必要
     private fun refreshRealmDB() {
         val allList = realm.where(ToDoRealm::class.java).findAll()
         realm.executeTransaction {

@@ -16,14 +16,14 @@ class EditToDO : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_to_do)
-
+        /*
         val receiveIntent = intent
 
         if (receiveIntent.extras?.getString("key2") != null) {
             val enteredTodo = receiveIntent.extras.getString("key2")
             todo_editText.setText(enteredTodo)
         }
-
+        */
         save_btn.setOnClickListener {
             val sendIntent = Intent()
 

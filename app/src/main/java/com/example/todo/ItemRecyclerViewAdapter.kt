@@ -40,11 +40,12 @@ class ItemRecyclerViewAdapter(
         notifyDataSetChanged()
     }
 
-    fun exchangeItem(position1: Int, position2: Int) {
-        val tmpItem = mItems.removeAt(position1)
-        mItems.add(position2, tmpItem)
-        val tmpIsChecked = mIsChecked.removeAt(position1)
-        mIsChecked.add(position2, tmpIsChecked)
+    fun insertItem(fromPosition: Int, toPosition: Int) {
+        val tmpItem = mItems.removeAt(fromPosition)
+        mItems.add(toPosition, tmpItem)
+
+        val tmpIsChecked = mIsChecked.removeAt(fromPosition)
+        mIsChecked.add(toPosition, tmpIsChecked)
 
         //notifyItemMoved(position1, position2)
     }
