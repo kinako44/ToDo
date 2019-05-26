@@ -109,7 +109,7 @@ class MainActivity : AppCompatActivity() {
             data != null) {
 
             val todoData = data.extras.getString("key1").toString()
-            if (todoData == "") return      // 入力がブランクのときの処理をここでする
+            if (todoData == "") return      // 入力がブランクのときは何もしない
 
             adapter.addItem(todoData, false)
 
