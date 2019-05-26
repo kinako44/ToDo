@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.support.v7.widget.RecyclerView
 import android.text.TextPaint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -59,7 +60,7 @@ class ItemRecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.todoBody.text = mItems[position]
         holder.check.isChecked = mIsChecked[position]
-
+        Log.d("todo", "OnBindViewHolder")
         fun switchTextViewLook() {
             val paint: TextPaint = holder.todoBody.paint
 
