@@ -1,17 +1,9 @@
 package com.example.todo
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.AlarmClock.EXTRA_MESSAGE
-import android.renderscript.ScriptGroup
-import android.util.Log
-import android.view.MenuItem
-import android.view.View
-import android.view.inputmethod.InputMethodManager
-import android.widget.Toolbar
 import kotlinx.android.synthetic.main.activity_edit_to_do.*
 
 class EditToDO : AppCompatActivity() {

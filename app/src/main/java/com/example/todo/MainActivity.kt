@@ -1,28 +1,19 @@
 package com.example.todo
 
 import android.app.Activity
-import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
+import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.Paint
+import android.graphics.drawable.ColorDrawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.AlarmClock.EXTRA_MESSAGE
+import android.support.design.widget.Snackbar
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
-import android.text.TextPaint
-import android.util.Log
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.TextView
 import io.realm.Realm
-import io.realm.RealmList
-import kotlinx.android.synthetic.main.activity_edit_to_do.*
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.ArrayList
 
@@ -47,7 +38,6 @@ class MainActivity : AppCompatActivity() {
         recycler.adapter = adapter
 
         // ドラッグ&ドロップとスワイプの処理
-        // activity内に実装するのはいまいちか？
         val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN
             , ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
@@ -61,10 +51,46 @@ class MainActivity : AppCompatActivity() {
                 return true
             }
 
+            override fun onChildDraw(
+                c: Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+
+
+                val background = ColorDrawable()
+                background.color = Color.parseColor("#f44336")
+                val itemView = viewHolder.itemView
+                val isLeftDirection = dX < 0
+                if (isLeftDirection) {
+                    background.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
+                } else {
+                    background.setBounds(itemView.left, itemView.top, itemView.left + dX.toInt(), itemView.bottom)
+                }
+                background.draw(c)
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+
+            }
+
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 viewHolder.let {
-                    adapter.removeItem(viewHolder.adapterPosition)
-                    recycler.adapter?.notifyItemRemoved(viewHolder.adapterPosition)
+                    // 元に戻す処理のため一時保存
+                    val position = it.adapterPosition
+                    val tmpItem = adapter.getItem(position)
+                    val tmpIsChecked = adapter.getIsChecked(position)
+
+                    adapter.removeItem(it.adapterPosition)
+                    recycler.adapter?.notifyItemRemoved(it.adapterPosition)
+
+                    Snackbar.make(context_view, R.string.item_removed_message, Snackbar.LENGTH_LONG)
+                        .setAction("元に戻す", View.OnClickListener {
+                            adapter.insertNewItem(tmpItem, tmpIsChecked, position)
+
+                        }).show()
                 }
             }
 

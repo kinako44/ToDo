@@ -23,9 +23,19 @@ class ItemRecyclerViewAdapter(
 
     override fun getItemCount(): Int = mItems.size
 
+    fun getItem(position: Int) = mItems[position]
+
+    fun getIsChecked(position: Int) = mIsChecked[position]
+
     fun addItem(item: String, check: Boolean) {
         mItems.add(item)
         mIsChecked.add(check)
+        notifyDataSetChanged()
+    }
+
+    fun insertNewItem(item:String, check: Boolean, position: Int) {
+        mItems.add(position, item)
+        mIsChecked.add(position, check)
         notifyDataSetChanged()
     }
 
