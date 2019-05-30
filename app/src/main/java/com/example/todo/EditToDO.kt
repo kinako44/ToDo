@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import kotlinx.android.synthetic.main.activity_edit_to_do.*
 
 class EditToDO : AppCompatActivity() {
@@ -19,7 +21,6 @@ class EditToDO : AppCompatActivity() {
             todo_editText.setText(enteredTodo)
         }
         */
-
 
         save_btn.setOnClickListener {
             val sendIntent = Intent()

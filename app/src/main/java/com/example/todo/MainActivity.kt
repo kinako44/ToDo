@@ -12,6 +12,7 @@ import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
+import android.util.Log
 import android.view.View
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.*
@@ -66,30 +67,61 @@ class MainActivity : AppCompatActivity() {
                 background.color = Color.parseColor("#f44336")
                 val itemView = viewHolder.itemView
                 val isLeftDirection = dX < 0
+                val deleteIcon = getDrawable(R.drawable.ic_delete_white_24dp)
+
+
+                // 背景の描写
                 if (isLeftDirection) {
                     background.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
                 } else {
                     background.setBounds(itemView.left, itemView.top, itemView.left + dX.toInt(), itemView.bottom)
                 }
                 background.draw(c)
+
+
+                // 削除アイコンの表示
+                if (deleteIcon != null) {
+                    val itemHeight = itemView.bottom - itemView.top
+                    val iconWidth = deleteIcon.intrinsicWidth
+                    val iconHeight = deleteIcon.intrinsicHeight
+
+                    // 左上が座標の原点
+                    val iconTop = itemView.top + (itemHeight - iconHeight) / 2
+                    val iconBottom = iconTop + iconHeight
+                    if (isLeftDirection) {
+                        val iconRight = itemView.right - (itemHeight - iconHeight) / 2
+                        val iconLeft = iconRight - iconWidth
+                        deleteIcon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+                        deleteIcon.draw(c)
+
+                    } else {
+                        val iconLeft = itemView.left + (itemHeight - iconHeight) / 2
+                        val iconRight = iconLeft + iconWidth
+                        deleteIcon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+                        deleteIcon.draw(c)
+                    }
+
+
+                }
+
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
 
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+
                 viewHolder.let {
                     // 元に戻す処理のため一時保存
-                    val position = it.adapterPosition
                     val tmpItem = adapter.getItem(position)
                     val tmpIsChecked = adapter.getIsChecked(position)
 
-                    adapter.removeItem(it.adapterPosition)
-                    recycler.adapter?.notifyItemRemoved(it.adapterPosition)
+                    adapter.removeItem(position)
+                    recycler.adapter?.notifyItemRemoved(position)
 
                     Snackbar.make(context_view, R.string.item_removed_message, Snackbar.LENGTH_LONG)
                         .setAction("元に戻す", View.OnClickListener {
                             adapter.insertNewItem(tmpItem, tmpIsChecked, position)
-
                         }).show()
                 }
             }
@@ -134,7 +166,7 @@ class MainActivity : AppCompatActivity() {
             requestCode == createNewTodoKey &&
             data != null) {
 
-            val todoData = data.extras.getString("key1").toString()
+            val todoData = data.extras?.getString("key1").toString()
             if (todoData == "") return      // 入力がブランクのときは何もしない
 
             adapter.addItem(todoData, false)
