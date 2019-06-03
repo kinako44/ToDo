@@ -6,3 +6,4 @@
 ・スワイプで削除（Snackbarを用いた削除通知と取り消し）  
 ・ドラッグアンドドロップでタスクの位置変更  
 
+![demo](https://raw.github.com/wiki/kinako44/ToDo/images/todo2.gif)
