@@ -3,4 +3,5 @@
     <string name="input_plan">タスクを入力</string>
     <string name="save_todo">保存</string>
     <string name="item_removed_message">削除しました</string>
+    <string name="item_undo_message">元に戻す</string>
 </resources>

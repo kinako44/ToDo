@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.design.widget.BaseTransientBottomBar
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
@@ -15,8 +16,9 @@ import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.Log
 import android.view.View
 import io.realm.Realm
+import io.realm.Sort
 import kotlinx.android.synthetic.main.activity_main.*
-import java.util.ArrayList
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -28,15 +30,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
         realm = Realm.getDefaultInstance()
 
         // RecyclerViewの初期化
-        recycler.setHasFixedSize(true)
-        recycler.layoutManager = LinearLayoutManager(this)
-        recycler.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
-        adapter = ItemRecyclerViewAdapter(ArrayList(), ArrayList(), this)
-        recycler.adapter = adapter
+        initRecyclerView()
 
         // ドラッグ&ドロップとスワイプの処理
         val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN
@@ -48,6 +45,8 @@ class MainActivity : AppCompatActivity() {
 
                 adapter.insertItem(fromPosition, toPosition)
                 recycler.adapter?.notifyItemMoved(fromPosition, toPosition)
+
+                moveItemInRealm(fromPosition + 1, toPosition + 1)
 
                 return true
             }
@@ -64,11 +63,11 @@ class MainActivity : AppCompatActivity() {
 
 
                 val background = ColorDrawable()
-                background.color = Color.parseColor("#f44336")
                 val itemView = viewHolder.itemView
                 val isLeftDirection = dX < 0
                 val deleteIcon = getDrawable(R.drawable.ic_delete_white_24dp)
 
+                background.color = Color.parseColor("#f44336")
 
                 // 背景の描写
                 if (isLeftDirection) {
@@ -78,14 +77,12 @@ class MainActivity : AppCompatActivity() {
                 }
                 background.draw(c)
 
-
                 // 削除アイコンの表示
                 if (deleteIcon != null) {
                     val itemHeight = itemView.bottom - itemView.top
                     val iconWidth = deleteIcon.intrinsicWidth
                     val iconHeight = deleteIcon.intrinsicHeight
 
-                    // 左上が座標の原点
                     val iconTop = itemView.top + (itemHeight - iconHeight) / 2
                     val iconBottom = iconTop + iconHeight
                     if (isLeftDirection) {
@@ -100,8 +97,6 @@ class MainActivity : AppCompatActivity() {
                         deleteIcon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
                         deleteIcon.draw(c)
                     }
-
-
                 }
 
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
@@ -111,25 +106,36 @@ class MainActivity : AppCompatActivity() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
 
-                viewHolder.let {
-                    // 元に戻す処理のため一時保存
-                    val tmpItem = adapter.getItem(position)
-                    val tmpIsChecked = adapter.getIsChecked(position)
+                // 元に戻す処理のため一時保存
+                val tmpItem = adapter.getItem(position)
+                val tmpIsChecked = adapter.getIsChecked(position)
 
-                    adapter.removeItem(position)
-                    recycler.adapter?.notifyItemRemoved(position)
+                adapter.removeItem(position)
+                recycler.adapter?.notifyItemRemoved(position)
 
-                    Snackbar.make(context_view, R.string.item_removed_message, Snackbar.LENGTH_LONG)
-                        .setAction("元に戻す", View.OnClickListener {
-                            adapter.insertNewItem(tmpItem, tmpIsChecked, position)
-                        }).show()
-                }
+                // Snackbarの実装
+                var isCancelled = false
+                Snackbar
+                    .make(context_view, R.string.item_removed_message, Snackbar.LENGTH_LONG)
+                    .addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                        // Realmの更新はSnackbarが消えたあと行う
+                        override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                            super.onDismissed(transientBottomBar, event)
+                            if (!isCancelled) {
+                                removeItemFromRealm(position + 1)
+                            }
+                        }
+                    })
+                    .setAction(R.string.item_undo_message, View.OnClickListener {
+                        adapter.insertNewItem(tmpItem, tmpIsChecked, position)
+                        isCancelled = true
+                    })
+                    .show()
             }
 
         })
         itemTouchHelper.attachToRecyclerView(recycler)
 
-        // floatingActionButtonのクリックリスナー実装
         fab.setOnClickListener {
             val intent = Intent(this, EditToDO::class.java)
             startActivityForResult(intent, createNewTodoKey)
@@ -137,62 +143,89 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    override fun onPause() {
-        super.onPause()
-        refreshRealmDB()    // insert, deleteしたときにDBを更新する　←　修正要
-    }
-
-
     override fun onResume() {
         super.onResume()
-        val todoLists = realm.where(ToDoRealm::class.java).findAll()
+        val todoLists = realm.where(ToDoRealm::class.java).sort("id", Sort.ASCENDING).findAll()
         adapter.clearAllItems()
         todoLists.forEach {
-            adapter.addItem(it.plan, it.isChecked)
+            adapter.addItem(it.task, it.isChecked)
         }
     }
-
 
     override fun onDestroy() {
         super.onDestroy()
-
         realm.close()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
+        super.onActivityResult(requestCode, resultCode, intent)
 
         if (resultCode == Activity.RESULT_OK &&
             requestCode == createNewTodoKey &&
-            data != null) {
+            intent != null) {
 
-            val todoData = data.extras?.getString("key1").toString()
-            if (todoData == "") return      // 入力がブランクのときは何もしない
+            val todoBody = intent.extras?.getString("key1").toString()
+            if (todoBody == "") return
 
-            adapter.addItem(todoData, false)
+            // RecyclerViewへ追加
+            adapter.addItem(todoBody, false)
 
-            // realmへの保存
-            realm.executeTransaction { realm ->
-                val newRealmObj = realm.createObject(ToDoRealm::class.java)
-                newRealmObj.plan = todoData
-                newRealmObj.isChecked = false
-            }
+            // realmへ保存
+            addNewItemToRealm(todoBody)
         }
     }
 
-    // Realmデータベースを新しく作り直す
-    // insertとdeleteした上で順番を保持できるように改良必要
-    private fun refreshRealmDB() {
-        val allList = realm.where(ToDoRealm::class.java).findAll()
+    private fun addNewItemToRealm(body: String) {
         realm.executeTransaction {
-            allList.deleteAllFromRealm()
-            adapter.mItems.forEachIndexed { index, it ->
-                val newRealmObj = realm.createObject(ToDoRealm::class.java)
-                newRealmObj.plan = it
-                newRealmObj.isChecked = adapter.mIsChecked[index]
+            val todoObj = realm.createObject(ToDoRealm::class.java)
+            todoObj.task = body
+            todoObj.id = createNewId()
+        }
+    }
+
+    private fun removeItemFromRealm(id: Int) {
+        val itemList =  realm.where(ToDoRealm::class.java).sort("id", Sort.DESCENDING)
+        val maxId = itemList.findFirst()!!.id
+
+        // データの削除
+        val item = itemList.equalTo("id", id).findAll()
+        realm.executeTransaction {
+            item.deleteFromRealm(0)
+        }
+
+        val updateItemList =  realm.where(ToDoRealm::class.java).sort("id", Sort.ASCENDING).findAll()
+        // インデックスの更新
+        if (maxId == id) {return}
+        else {
+            realm.executeTransaction {
+                for (index in (id + 1)..maxId) {    // removeしたidより大きいidを1減らす
+                    updateItemList[index - 2]!!.id -= 1      // realmのindexはidより1小さい上にremoveで1減っているので-2
+                }
             }
         }
     }
 
+    private fun moveItemInRealm(fromId: Int, toId: Int) {
+        val itemList = realm.where(ToDoRealm::class.java).sort("id", Sort.ASCENDING).findAll()
+
+        realm.executeTransaction {
+            val tmpTask = itemList[toId - 1]!!.task
+            itemList[toId - 1]!!.task = itemList[fromId - 1]!!.task
+            itemList[fromId - 1]!!.task = tmpTask
+        }
+    }
+
+    private fun createNewId(): Int {
+        val id: Int =  realm.where(ToDoRealm::class.java).sort("id", Sort.DESCENDING).findFirst()?.id ?: 0
+        return id + 1
+    }
+
+    private fun initRecyclerView() {
+        recycler.setHasFixedSize(true)
+        recycler.layoutManager = LinearLayoutManager(this)
+        recycler.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+        adapter = ItemRecyclerViewAdapter(ArrayList(), ArrayList(), this)
+        recycler.adapter = adapter
+    }
 
 }

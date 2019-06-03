@@ -20,8 +20,11 @@ class DatabaseController : Application() {
 
 open class ToDoRealm : RealmObject() {
 
+    //@PrimaryKey
+
     @Required
-    var plan: String = ""
+    var task: String = ""
     var isChecked: Boolean = false
+    var id: Int = 0
 
 }
