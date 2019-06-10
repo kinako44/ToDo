@@ -9,7 +9,7 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
-            android:name=".DatabaseController">
+            android:name=".data.RealmApplication">
 
         <activity android:name=".MainActivity">
             <intent-filter>

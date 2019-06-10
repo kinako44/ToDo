@@ -11,18 +11,18 @@
             android:layout_height="183dp" android:id="@+id/textView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" android:background="@android:color/background_light"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toTopOf="@+id/todo_editText"/>
-    <EditText
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:ems="10"
-            android:id="@+id/todo_editText" android:layout_marginEnd="16dp"
-            app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            android:hint="@string/input_plan" android:inputType="text"
-            android:gravity="left|center_vertical"
-            android:layout_marginBottom="24dp"
-            app:layout_constraintBottom_toTopOf="@+id/save_btn"/>
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/save_btn" app:hintAnimationEnabled="true"
+            android:id="@+id/TextInoutLayout">
+
+        <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/input_plan" android:id="@+id/todo_editText"/>
+    </android.support.design.widget.TextInputLayout>
     <Button
             android:text="@string/save_todo"
             android:layout_width="0dp"

@@ -5,15 +5,13 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.support.v7.widget.RecyclerView
 import android.text.TextPaint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
+import com.example.todo.data.Task
 import io.realm.Realm
-import io.realm.RealmResults
-import io.realm.Sort
 import kotlinx.android.synthetic.main.item.view.*
 import java.util.ArrayList
 
@@ -96,8 +94,8 @@ class ItemRecyclerViewAdapter(
 
             val realm = Realm.getDefaultInstance()
             realm.executeTransaction {
-                val item = realm.where(ToDoRealm::class.java).equalTo("id", (position + 1)).findFirst()
-                item!!.isChecked = !item.isChecked
+                val item = realm.where(Task::class.java).equalTo("id", (position + 1)).findFirst()
+                item!!.isCompleted = !item.isCompleted
             }
             switchTextViewLook()
         }

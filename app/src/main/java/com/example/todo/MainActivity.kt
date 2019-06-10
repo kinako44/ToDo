@@ -7,6 +7,8 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Parcel
+import android.os.Parcelable
 import android.support.design.widget.BaseTransientBottomBar
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.DividerItemDecoration
@@ -15,25 +17,35 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.Log
 import android.view.View
+import com.example.todo.data.Task
 import io.realm.Realm
 import io.realm.Sort
+import kotlinx.android.synthetic.main.activity_edit_to_do.*
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity() : AppCompatActivity(), TaskListFragment.OnListFragmentInteractionListener {
 
     private val createNewTodoKey: Int = 1
     private lateinit var realm: Realm
-    private lateinit var adapter: ItemRecyclerViewAdapter
+    // private lateinit var adapter: ItemRecyclerViewAdapter
+
+    constructor(parcel: Parcel) : this() {
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         realm = Realm.getDefaultInstance()
+        supportFragmentManager.beginTransaction().add(R.id.container, TaskListFragment()).commit()
+
+        /*
+        realm = Realm.getDefaultInstance()
 
         // RecyclerViewの初期化
-        initRecyclerView()
+        initializeRecyclerView()
 
         // ドラッグ&ドロップとスワイプの処理
         val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN
@@ -100,7 +112,6 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
@@ -114,41 +125,52 @@ class MainActivity : AppCompatActivity() {
                 recycler.adapter?.notifyItemRemoved(position)
 
                 // Snackbarの実装
-                var isCancelled = false
+                var cancel = false
                 Snackbar
                     .make(context_view, R.string.item_removed_message, Snackbar.LENGTH_LONG)
                     .addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
                         // Realmの更新はSnackbarが消えたあと行う
                         override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
                             super.onDismissed(transientBottomBar, event)
-                            if (!isCancelled) {
+                            if (!cancel) {
                                 removeItemFromRealm(position + 1)
                             }
                         }
                     })
                     .setAction(R.string.item_undo_message, View.OnClickListener {
                         adapter.insertNewItem(tmpItem, tmpIsChecked, position)
-                        isCancelled = true
+                        cancel = true
                     })
                     .show()
             }
 
         })
         itemTouchHelper.attachToRecyclerView(recycler)
+        */
 
         fab.setOnClickListener {
-            val intent = Intent(this, EditToDO::class.java)
-            startActivityForResult(intent, createNewTodoKey)
+            showEditDisplay()
         }
 
     }
 
+    override fun onListFragmentInteraction(item: Task?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+    }
+
+
+    private fun showEditDisplay() {
+        val intent = Intent(this, EditToDO::class.java)
+        startActivityForResult(intent, createNewTodoKey)
+    }
+
     override fun onResume() {
         super.onResume()
-        val todoLists = realm.where(ToDoRealm::class.java).sort("id", Sort.ASCENDING).findAll()
-        adapter.clearAllItems()
+        val todoLists = realm.where(Task::class.java).sort("id", Sort.ASCENDING).findAll()
+        //adapter.clearAllItems()
         todoLists.forEach {
-            adapter.addItem(it.task, it.isChecked)
+            //adapter.addItem(it.task, it.isCompleted)
         }
     }
 
@@ -164,11 +186,12 @@ class MainActivity : AppCompatActivity() {
             requestCode == createNewTodoKey &&
             intent != null) {
 
-            val todoBody = intent.extras?.getString("key1").toString()
+            val todoBody = intent.extras?.getString(EditToDO.NEW_DATA_FROM_EDIT_KEY).toString()
+            Log.d("onActivityResult", todoBody)
             if (todoBody == "") return
 
             // RecyclerViewへ追加
-            adapter.addItem(todoBody, false)
+            //adapter.addItem(todoBody, false)
 
             // realmへ保存
             addNewItemToRealm(todoBody)
@@ -177,14 +200,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun addNewItemToRealm(body: String) {
         realm.executeTransaction {
-            val todoObj = realm.createObject(ToDoRealm::class.java)
+            val todoObj = realm.createObject(Task::class.java)
             todoObj.task = body
             todoObj.id = createNewId()
         }
     }
 
     private fun removeItemFromRealm(id: Int) {
-        val itemList =  realm.where(ToDoRealm::class.java).sort("id", Sort.DESCENDING)
+        val itemList =  realm.where(Task::class.java).sort("id", Sort.DESCENDING)
         val maxId = itemList.findFirst()!!.id
 
         // データの削除
@@ -193,20 +216,20 @@ class MainActivity : AppCompatActivity() {
             item.deleteFromRealm(0)
         }
 
-        val updateItemList =  realm.where(ToDoRealm::class.java).sort("id", Sort.ASCENDING).findAll()
+        val updateItemList =  realm.where(Task::class.java).sort("id", Sort.ASCENDING).findAll()
         // インデックスの更新
-        if (maxId == id) {return}
-        else {
-            realm.executeTransaction {
-                for (index in (id + 1)..maxId) {    // removeしたidより大きいidを1減らす
-                    updateItemList[index - 2]!!.id -= 1      // realmのindexはidより1小さい上にremoveで1減っているので-2
-                }
+        if (maxId == id) {
+            return
+        }
+        realm.executeTransaction {
+            for (index in (id + 1)..maxId) {    // removeしたidより大きいidを1減らす
+                updateItemList[index - 2]!!.id -= 1      // realmのindexはidより1小さい上にremoveで1減っているので-2
             }
         }
     }
 
     private fun moveItemInRealm(fromId: Int, toId: Int) {
-        val itemList = realm.where(ToDoRealm::class.java).sort("id", Sort.ASCENDING).findAll()
+        val itemList = realm.where(Task::class.java).sort("id", Sort.ASCENDING).findAll()
 
         realm.executeTransaction {
             val tmpTask = itemList[toId - 1]!!.task
@@ -216,16 +239,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun createNewId(): Int {
-        val id: Int =  realm.where(ToDoRealm::class.java).sort("id", Sort.DESCENDING).findFirst()?.id ?: 0
+        val id: Int =  realm.where(Task::class.java).sort("id", Sort.DESCENDING).findFirst()?.id ?: 0
         return id + 1
     }
 
-    private fun initRecyclerView() {
-        recycler.setHasFixedSize(true)
-        recycler.layoutManager = LinearLayoutManager(this)
-        recycler.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
-        adapter = ItemRecyclerViewAdapter(ArrayList(), ArrayList(), this)
-        recycler.adapter = adapter
-    }
 
+    companion object CREATOR : Parcelable.Creator<MainActivity> {
+        override fun createFromParcel(parcel: Parcel): MainActivity {
+            return MainActivity(parcel)
+        }
+
+        override fun newArray(size: Int): Array<MainActivity?> {
+            return arrayOfNulls(size)
+        }
+    }
 }

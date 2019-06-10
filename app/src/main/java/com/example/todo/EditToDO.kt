@@ -4,9 +4,9 @@ import android.app.Activity
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.view.WindowManager
-import android.view.inputmethod.InputMethodManager
+import android.util.Log
 import kotlinx.android.synthetic.main.activity_edit_to_do.*
+import kotlinx.android.synthetic.main.activity_edit_to_do.view.*
 
 class EditToDO : AppCompatActivity() {
 
@@ -15,16 +15,21 @@ class EditToDO : AppCompatActivity() {
         setContentView(R.layout.activity_edit_to_do)
 
         save_btn.setOnClickListener {
-            val sendIntent = Intent()
+            val intent = Intent()
 
-            if (todo_editText.text != null) {
-                sendIntent.putExtra("key1", todo_editText.text.toString())
+            val editText = TextInoutLayout.editText
+            if (editText != null) {
+                intent.putExtra(NEW_DATA_FROM_EDIT_KEY, editText.text.toString())
                 todo_editText.setText("")
             }
 
-            setResult(Activity.RESULT_OK, sendIntent)
+            setResult(Activity.RESULT_OK, intent)
             finish()
         }
+    }
+
+    companion object {
+        const val NEW_DATA_FROM_EDIT_KEY = "NEW_DATA_FROM_EDIT_KEY"
     }
 
 
