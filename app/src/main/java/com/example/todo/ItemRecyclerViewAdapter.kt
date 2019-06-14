@@ -104,7 +104,7 @@ class ItemRecyclerViewAdapter(
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view){
         val todoBody: TextView = view.body_todo
-        val check: CheckBox = view.checkBox
+        val check: CheckBox = view.check_completion
 
     }
 }

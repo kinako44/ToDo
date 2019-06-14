@@ -1,45 +1,39 @@
-package com.example.todo
+package com.example.todo.TaskList
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Parcel
-import android.os.Parcelable
-import android.support.design.widget.BaseTransientBottomBar
-import android.support.design.widget.Snackbar
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.Log
-import android.view.View
+import com.example.todo.EditToDO
+import com.example.todo.R
 import com.example.todo.data.Task
 import io.realm.Realm
 import io.realm.Sort
-import kotlinx.android.synthetic.main.activity_edit_to_do.*
 import kotlinx.android.synthetic.main.activity_main.*
-import java.util.*
 
-class MainActivity() : AppCompatActivity(), TaskListFragment.OnListFragmentInteractionListener {
+class TaskListActivity : AppCompatActivity(){
 
     private val createNewTodoKey: Int = 1
     private lateinit var realm: Realm
     // private lateinit var adapter: ItemRecyclerViewAdapter
 
-    constructor(parcel: Parcel) : this() {
 
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         realm = Realm.getDefaultInstance()
-        supportFragmentManager.beginTransaction().add(R.id.container, TaskListFragment()).commit()
+        val taskListFragment = supportFragmentManager.findFragmentById(R.id.container) as TaskListFragment? ?:
+                            TaskListFragment().also {
+                                supportFragmentManager
+                                    .beginTransaction()
+                                    .replace(R.id.container, it)
+                                    .commit()
+                            }
+
+        TaskListPresenter(taskListFragment)
 
         /*
         realm = Realm.getDefaultInstance()
@@ -148,15 +142,11 @@ class MainActivity() : AppCompatActivity(), TaskListFragment.OnListFragmentInter
         itemTouchHelper.attachToRecyclerView(recycler)
         */
 
-        fab.setOnClickListener {
+        /*
+        fab_add_task.setOnClickListener {
             showEditDisplay()
         }
-
-    }
-
-    override fun onListFragmentInteraction(item: Task?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-
+        */
     }
 
 
@@ -244,13 +234,4 @@ class MainActivity() : AppCompatActivity(), TaskListFragment.OnListFragmentInter
     }
 
 
-    companion object CREATOR : Parcelable.Creator<MainActivity> {
-        override fun createFromParcel(parcel: Parcel): MainActivity {
-            return MainActivity(parcel)
-        }
-
-        override fun newArray(size: Int): Array<MainActivity?> {
-            return arrayOfNulls(size)
-        }
-    }
 }

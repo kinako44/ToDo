@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.example.todo">
 
     <application
@@ -11,7 +11,7 @@
             android:theme="@style/AppTheme"
             android:name=".data.RealmApplication">
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".TaskList.TaskListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -19,14 +19,14 @@
             </intent-filter>
         </activity>
         <activity android:name=".EditToDO"
-                  android:parentActivityName=".MainActivity"
+                  android:parentActivityName=".TaskList.TaskListActivity"
                   android:label=""
                   android:theme="@style/Theme.TranslucentBackground"
                   android:windowSoftInputMode="adjustResize">
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".MainActivity" />
+                    android:value=".TaskList.TaskListActivity" />
         </activity>
     </application>
 
