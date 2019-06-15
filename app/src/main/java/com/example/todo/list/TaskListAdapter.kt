@@ -1,4 +1,4 @@
-package com.example.todo.TaskList
+package com.example.todo.list
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -38,12 +38,12 @@ class TaskListAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = model[position]
-        holder.taskBody.text = item?.task ?: ""
-        holder.checkCompletion.isChecked = item?.isCompleted ?: false
-
-        with(holder.checkCompletion) {
-            setOnClickListener {
-                listener.onCheckBoxClick(holder.mView)
+        with(holder) {
+            taskBody.text = item?.task ?: ""
+            taskBody.tag = item
+            checkCompletion.isChecked = item?.isCompleted ?: false
+            checkCompletion.setOnClickListener { v ->
+                listener.onCheckBoxClick(v, item!!)
             }
         }
 

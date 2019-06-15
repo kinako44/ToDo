@@ -1,4 +1,4 @@
-package com.example.todo.TaskList
+package com.example.todo.list
 
 import android.content.Context
 import android.content.Intent
@@ -14,7 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
-import com.example.todo.EditToDO
+import com.example.todo.edit.TaskEditActivity
 import com.example.todo.R
 import com.example.todo.data.Task
 
@@ -29,11 +29,11 @@ class TaskListFragment : Fragment(), TaskListContract.View {
     override lateinit var presenter: TaskListContract.Presenter
 
 
-    internal var itemClickListener : ItemClickListener = object : ItemClickListener {
-        override fun onCheckBoxClick(view: View) {
-            val taskBody: TextView = view.findViewById(R.id.task_body)
-            val checkCompletion: CheckBox = view.findViewById(R.id.check_completion)
-            presenter.switchTaskFontColor(checkCompletion.isChecked, taskBody)
+    private var itemClickListener : ItemClickListener = object : ItemClickListener {
+        override fun onCheckBoxClick(view: View, tag: Task) {
+            if (view is CheckBox) {
+                presenter.switchTaskFontColor(view.isChecked, tag)
+            }
         }
     }
 
@@ -60,7 +60,7 @@ class TaskListFragment : Fragment(), TaskListContract.View {
                     else -> GridLayoutManager(context, columnCount)
                 }
 
-                // TODO: repositoryに移譲
+                // TODO: repositoryに書いて取得はPresenterに任せる
                 val realm = Realm.getDefaultInstance()
                 val itemList = realm.where(Task::class.java).sort(Task::id.name).findAll()
                 realm.close()
@@ -95,16 +95,18 @@ class TaskListFragment : Fragment(), TaskListContract.View {
 
 
     override fun showAddTask() {
-        val intent = Intent(context, EditToDO::class.java)
+        val intent = Intent(context, TaskEditActivity::class.java)
         startActivityForResult(intent, 1)   // TODO change key
 
     }
 
-    override fun changeFontColorToGray(textView: TextView) {
-        textView.setTextColor(ContextCompat.getColor(context!!, R.color.colorFontPrimaryLight))
+    override fun changeFontColorToGray(tag: Task) {
+        val textView = view?.findViewWithTag<TextView>(tag) ?: return
+         textView.setTextColor(ContextCompat.getColor(context!!, R.color.colorFontPrimaryLight))
     }
 
-    override fun changeFontColorToBlack(textView: TextView) {
+    override fun changeFontColorToBlack(tag: Task) {
+        val textView = view?.findViewWithTag<TextView>(tag) ?: return
         textView.setTextColor(ContextCompat.getColor(context!!, R.color.colorFontPrimary))
     }
 
@@ -123,7 +125,7 @@ class TaskListFragment : Fragment(), TaskListContract.View {
 
     interface ItemClickListener {
 
-        fun onCheckBoxClick(view: View)
+        fun onCheckBoxClick(view: View, task: Task)
 
     }
 

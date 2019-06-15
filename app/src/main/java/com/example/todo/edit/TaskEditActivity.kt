@@ -1,14 +1,13 @@
-package com.example.todo
+package com.example.todo.edit
 
 import android.app.Activity
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import com.example.todo.R
 import kotlinx.android.synthetic.main.activity_edit_to_do.*
-import kotlinx.android.synthetic.main.activity_edit_to_do.view.*
 
-class EditToDO : AppCompatActivity() {
+class TaskEditActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

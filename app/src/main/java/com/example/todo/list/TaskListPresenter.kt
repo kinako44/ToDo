@@ -1,7 +1,8 @@
-package com.example.todo.TaskList
+package com.example.todo.list
 
 
-import android.widget.TextView
+import android.util.Log
+import com.example.todo.data.Task
 
 class TaskListPresenter(private val taskListView: TaskListContract.View) : TaskListContract.Presenter {
 
@@ -22,10 +23,10 @@ class TaskListPresenter(private val taskListView: TaskListContract.View) : TaskL
     }
 
 
-    override fun switchTaskFontColor(isCompleted: Boolean, textView: TextView) {
+    override fun switchTaskFontColor(isCompleted: Boolean, task: Task) {
         when (isCompleted) {
-            true -> taskListView.changeFontColorToGray(textView)
-            false -> taskListView.changeFontColorToBlack(textView)
+            true -> taskListView.changeFontColorToGray(task)
+            false -> taskListView.changeFontColorToBlack(task)
         }
     }
 

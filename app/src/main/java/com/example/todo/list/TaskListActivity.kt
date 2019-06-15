@@ -1,16 +1,15 @@
-package com.example.todo.TaskList
+package com.example.todo.list
 
 import android.app.Activity
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import com.example.todo.EditToDO
+import com.example.todo.edit.TaskEditActivity
 import com.example.todo.R
 import com.example.todo.data.Task
 import io.realm.Realm
 import io.realm.Sort
-import kotlinx.android.synthetic.main.activity_main.*
 
 class TaskListActivity : AppCompatActivity(){
 
@@ -151,7 +150,7 @@ class TaskListActivity : AppCompatActivity(){
 
 
     private fun showEditDisplay() {
-        val intent = Intent(this, EditToDO::class.java)
+        val intent = Intent(this, TaskEditActivity::class.java)
         startActivityForResult(intent, createNewTodoKey)
     }
 
@@ -176,7 +175,7 @@ class TaskListActivity : AppCompatActivity(){
             requestCode == createNewTodoKey &&
             intent != null) {
 
-            val todoBody = intent.extras?.getString(EditToDO.NEW_DATA_FROM_EDIT_KEY).toString()
+            val todoBody = intent.extras?.getString(TaskEditActivity.NEW_DATA_FROM_EDIT_KEY).toString()
             Log.d("onActivityResult", todoBody)
             if (todoBody == "") return
 
