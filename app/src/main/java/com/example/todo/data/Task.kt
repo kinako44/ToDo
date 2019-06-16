@@ -8,7 +8,7 @@ open class Task : RealmObject() {
     //@PrimaryKey
 
     @Required
-    var task: String = ""
+    var body: String = ""
     var isCompleted: Boolean = false
-    var id: Int = 0         // start is 0
+    var id: Int = -1         // start is 0
 }

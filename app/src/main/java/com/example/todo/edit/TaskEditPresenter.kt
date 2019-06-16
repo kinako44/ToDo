@@ -1,7 +1,12 @@
 package com.example.todo.edit
 
+import com.example.todo.data.Repository
+import com.example.todo.data.Task
 
-class TaskEditPresenter(private val taskEditView: TaskEditContract.View) : TaskEditContract.Presenter {
+
+class TaskEditPresenter(private val taskEditView: TaskEditContract.View,
+                        private val repository: Repository)
+    : TaskEditContract.Presenter {
 
     init {
         taskEditView.presenter = this
@@ -11,6 +16,11 @@ class TaskEditPresenter(private val taskEditView: TaskEditContract.View) : TaskE
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override fun saveTask(task: Task) {
+        if (task.body != "") {
+            repository.saveTask(task)
+        }
+    }
 
 
 }

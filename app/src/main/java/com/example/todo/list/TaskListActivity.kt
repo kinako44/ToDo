@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.util.Log
 import com.example.todo.edit.TaskEditActivity
 import com.example.todo.R
+import com.example.todo.data.RealmData
+import com.example.todo.data.Repository
 import com.example.todo.data.Task
 import io.realm.Realm
 import io.realm.Sort
@@ -15,15 +17,18 @@ class TaskListActivity : AppCompatActivity(){
 
     private val createNewTodoKey: Int = 1
     private lateinit var realm: Realm
-    // private lateinit var adapter: ItemRecyclerViewAdapter
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         realm = Realm.getDefaultInstance()
+
+        /*
+        realm.executeTransaction {
+            realm.where(Task::class.java).findAll().deleteAllFromRealm()
+        }
+        */
         val taskListFragment = supportFragmentManager.findFragmentById(R.id.container) as TaskListFragment? ?:
                             TaskListFragment().also {
                                 supportFragmentManager
@@ -32,13 +37,10 @@ class TaskListActivity : AppCompatActivity(){
                                     .commit()
                             }
 
-        TaskListPresenter(taskListFragment)
+        TaskListPresenter(taskListFragment, Repository(RealmData()))
 
         /*
-        realm = Realm.getDefaultInstance()
 
-        // RecyclerViewの初期化
-        initializeRecyclerView()
 
         // ドラッグ&ドロップとスワイプの処理
         val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN
@@ -141,11 +143,6 @@ class TaskListActivity : AppCompatActivity(){
         itemTouchHelper.attachToRecyclerView(recycler)
         */
 
-        /*
-        fab_add_task.setOnClickListener {
-            showEditDisplay()
-        }
-        */
     }
 
 
@@ -154,14 +151,6 @@ class TaskListActivity : AppCompatActivity(){
         startActivityForResult(intent, createNewTodoKey)
     }
 
-    override fun onResume() {
-        super.onResume()
-        val todoLists = realm.where(Task::class.java).sort("id", Sort.ASCENDING).findAll()
-        //adapter.clearAllItems()
-        todoLists.forEach {
-            //adapter.addItem(it.task, it.isCompleted)
-        }
-    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -179,19 +168,6 @@ class TaskListActivity : AppCompatActivity(){
             Log.d("onActivityResult", todoBody)
             if (todoBody == "") return
 
-            // RecyclerViewへ追加
-            //adapter.addItem(todoBody, false)
-
-            // realmへ保存
-            addNewItemToRealm(todoBody)
-        }
-    }
-
-    private fun addNewItemToRealm(body: String) {
-        realm.executeTransaction {
-            val todoObj = realm.createObject(Task::class.java)
-            todoObj.task = body
-            todoObj.id = createNewId()
         }
     }
 
@@ -221,15 +197,10 @@ class TaskListActivity : AppCompatActivity(){
         val itemList = realm.where(Task::class.java).sort("id", Sort.ASCENDING).findAll()
 
         realm.executeTransaction {
-            val tmpTask = itemList[toId - 1]!!.task
-            itemList[toId - 1]!!.task = itemList[fromId - 1]!!.task
-            itemList[fromId - 1]!!.task = tmpTask
+            val tmpTask = itemList[toId - 1]!!.body
+            itemList[toId - 1]!!.body = itemList[fromId - 1]!!.body
+            itemList[fromId - 1]!!.body = tmpTask
         }
-    }
-
-    private fun createNewId(): Int {
-        val id: Int =  realm.where(Task::class.java).sort("id", Sort.DESCENDING).findFirst()?.id ?: 0
-        return id + 1
     }
 
 

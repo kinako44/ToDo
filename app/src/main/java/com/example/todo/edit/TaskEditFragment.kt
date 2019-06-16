@@ -4,11 +4,14 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.CardView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 
 import com.example.todo.R
+import com.example.todo.data.Task
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,11 +27,16 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  *
  */
-class TaskEditFragment : Fragment() {
+class TaskEditFragment : Fragment(), TaskEditContract.View {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
     private var listener: OnFragmentInteractionListener? = null
+
+    override lateinit var presenter: TaskEditContract.Presenter
+    private lateinit var saveButton: CardView
+    private lateinit var taskInput: EditText
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,12 +51,31 @@ class TaskEditFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_task_edit, container, false)
+
+        val root = inflater.inflate(R.layout.fragment_task_edit, container, false)
+
+        with(root) {
+            taskInput = findViewById(R.id.task_input)
+            saveButton = findViewById(R.id.task_input_complete)
+        }
+
+        return root
     }
 
     // TODO: Rename method, update argument and hook method into UI event
     fun onButtonPressed(uri: Uri) {
         listener?.onFragmentInteraction(uri)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        saveButton.setOnClickListener {
+            val task = Task()
+            task.body = taskInput.text.toString()
+            presenter.saveTask(task)
+            activity?.finish()
+        }
     }
 
     override fun onAttach(context: Context) {
@@ -80,6 +107,7 @@ class TaskEditFragment : Fragment() {
         // TODO: Update argument type and name
         fun onFragmentInteraction(uri: Uri)
     }
+
 
     companion object {
         /**

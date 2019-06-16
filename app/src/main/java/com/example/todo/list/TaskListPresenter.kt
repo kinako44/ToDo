@@ -1,10 +1,13 @@
 package com.example.todo.list
 
 
-import android.util.Log
+import com.example.todo.data.Repository
 import com.example.todo.data.Task
 
-class TaskListPresenter(private val taskListView: TaskListContract.View) : TaskListContract.Presenter {
+class TaskListPresenter(private val taskListView: TaskListContract.View,
+                        private val repository: Repository
+    ) : TaskListContract.Presenter {
+
 
     init {
         taskListView.presenter = this
@@ -23,11 +26,19 @@ class TaskListPresenter(private val taskListView: TaskListContract.View) : TaskL
     }
 
 
-    override fun switchTaskFontColor(isCompleted: Boolean, task: Task) {
+    override fun switchTaskFontColor(isCompleted: Boolean, tag: Task) {
         when (isCompleted) {
-            true -> taskListView.changeFontColorToGray(task)
-            false -> taskListView.changeFontColorToBlack(task)
+            true -> taskListView.changeFontColorToGray(tag)
+            false -> taskListView.changeFontColorToBlack(tag)
         }
+    }
+
+    override fun updateTask(task: Task) {
+        repository.saveTask(task)
+    }
+
+    override fun getTask(): List<Task> {
+        return repository.getAllTasks()
     }
 
 

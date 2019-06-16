@@ -11,7 +11,11 @@ interface TaskListContract {
 
         fun showTaskDetail()
 
-        fun switchTaskFontColor(isCompleted: Boolean, task: Task)
+        fun switchTaskFontColor(isCompleted: Boolean, tag: Task)
+
+        fun updateTask(task: Task)
+
+        fun getTask(): List<Task>
 
     }
 

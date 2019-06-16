@@ -22,7 +22,7 @@
         <activity android:name=".edit.TaskEditActivity"
                   android:parentActivityName=".list.TaskListActivity"
                   android:label=""
-                  android:theme="@style/Theme.TranslucentBackground"
+                  android:theme="@style/AppTheme"
                   android:windowSoftInputMode="adjustResize">
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data

@@ -1,6 +1,7 @@
 package com.example.todo.list
 
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,25 +11,12 @@ import com.example.todo.R
 
 
 import com.example.todo.data.Task
-import io.realm.RealmResults
 
 
 class TaskListAdapter(
-    private val model: RealmResults<Task>,
+    private val model: List<Task>,  // RealmResults<Task>
     private val listener: TaskListFragment.ItemClickListener
 ) : RecyclerView.Adapter<TaskListAdapter.ViewHolder>() {
-
-    init {
-        /*
-        mOnClickListener = View.OnClickListener { v ->
-            val item = v.tag as Task
-            // Notify the active callbacks interface (the activity, if the fragment is attached to
-            // one) that an item has been selected.
-            //if ()
-            //listener?.onListFragmentInteraction(item)
-        }
-        */
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -39,15 +27,16 @@ class TaskListAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = model[position]
         with(holder) {
-            taskBody.text = item?.task ?: ""
+            taskBody.text = item.body
             taskBody.tag = item
-            checkCompletion.isChecked = item?.isCompleted ?: false
+            checkCompletion.isChecked = item.isCompleted
+
             checkCompletion.setOnClickListener { v ->
-                listener.onCheckBoxClick(v, item!!)
+                listener.onCheckBoxClicked(v, item)
             }
         }
-
     }
+
 
     override fun getItemCount(): Int = model.size
 

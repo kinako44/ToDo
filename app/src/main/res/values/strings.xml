@@ -4,6 +4,7 @@
     <string name="save_todo">保存</string>
     <string name="item_removed_message">削除しました</string>
     <string name="item_undo_message">元に戻す</string>
+    <string name="deadline_setting">期限日を設定</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

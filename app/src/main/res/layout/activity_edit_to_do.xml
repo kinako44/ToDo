@@ -1,37 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        tools:context=".edit.TaskEditActivity" android:id="@+id/edit_to_do" android:layout_height="match_parent">
-
-    <TextView
-            android:layout_width="0dp"
-            android:layout_height="183dp" android:id="@+id/textView"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" android:background="@android:color/background_light"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-    <android.support.design.widget.TextInputLayout
+        tools:context=".edit.TaskEditActivity" android:layout_height="match_parent" android:orientation="vertical">
+    <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/save_btn" app:hintAnimationEnabled="true"
-            android:id="@+id/TextInoutLayout">
+            android:layout_height="0dp" android:layout_weight="2" android:id="@+id/task_add_container"
+    >
 
-        <android.support.design.widget.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/input_plan" android:id="@+id/todo_editText"/>
-    </android.support.design.widget.TextInputLayout>
-    <Button
-            android:text="@string/save_todo"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/save_btn"
-            android:background="@drawable/round_corner_5dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="16dp" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="16dp" android:textColor="@android:color/background_light"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="32dp"/>
-</android.support.constraint.ConstraintLayout>
+    </FrameLayout>
+</LinearLayout>
