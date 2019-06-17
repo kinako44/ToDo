@@ -27,7 +27,5 @@ interface TaskListContract {
 
         fun changeFontColorToBlack(tag: Task)
 
-
-
     }
 }

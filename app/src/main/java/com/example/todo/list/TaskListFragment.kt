@@ -22,11 +22,11 @@ import com.example.todo.data.Task
 class TaskListFragment : Fragment(), TaskListContract.View {
 
     private var columnCount = 1
-    private var listener: ItemClickListener? = null
+    private var listener: RecyclerStateListener? = null
     override lateinit var presenter: TaskListContract.Presenter
 
 
-    private var itemClickListener : ItemClickListener = object : ItemClickListener {
+    private var recyclerViewListener : RecyclerStateListener = object : RecyclerStateListener {
         override fun onCheckBoxClicked(view: View, tag: Task) {
             if (view is CheckBox) {
                 presenter.switchTaskFontColor(view.isChecked, tag)
@@ -39,6 +39,12 @@ class TaskListFragment : Fragment(), TaskListContract.View {
                 presenter.updateTask(task)
             }
         }
+
+        override fun onBindViewHolder(isCompleted: Boolean, tag: Task) {
+            Log.d("onBindViewHolder", tag.toString())
+            presenter.switchTaskFontColor(isCompleted, tag)
+        }
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,7 +70,7 @@ class TaskListFragment : Fragment(), TaskListContract.View {
                 }
 
                 val itemList = presenter.getTask()
-                adapter = TaskListAdapter(itemList, itemClickListener)
+                adapter = TaskListAdapter(itemList, recyclerViewListener)
             }
         }
 
@@ -89,6 +95,7 @@ class TaskListFragment : Fragment(), TaskListContract.View {
     override fun changeFontColorToGray(tag: Task) {
         val textView = view?.findViewWithTag<TextView>(tag) ?: return
         textView.setTextColor(ContextCompat.getColor(context!!, R.color.colorFontPrimaryLight))
+
     }
 
     override fun changeFontColorToBlack(tag: Task) {
@@ -97,9 +104,11 @@ class TaskListFragment : Fragment(), TaskListContract.View {
     }
 
 
-    interface ItemClickListener {
+    interface RecyclerStateListener {
 
         fun onCheckBoxClicked(view: View, tag: Task)
+
+        fun onBindViewHolder(isCompleted: Boolean, tag: Task)
 
     }
 
