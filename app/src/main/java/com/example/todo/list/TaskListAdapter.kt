@@ -1,6 +1,5 @@
 package com.example.todo.list
 
-import android.graphics.Color
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +14,7 @@ import com.example.todo.data.Task
 
 class TaskListAdapter(
     private val model: List<Task>,  // RealmResults<Task>
-    private val listener: TaskListFragment.RecyclerStateListener
+    private val listener: TaskListFragment.RecyclerViewStateListener
 ) : RecyclerView.Adapter<TaskListAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -31,12 +30,15 @@ class TaskListAdapter(
             taskBody.tag = item
             checkCompletion.isChecked = item.isCompleted
 
-            listener.onBindViewHolder(item.isCompleted, item)
-
-            checkCompletion.setOnClickListener { v ->
-                listener.onCheckBoxClicked(v, item)
+            checkCompletion.setOnClickListener {
+                listener.onCheckBoxClick(item)
             }
         }
+    }
+
+    override fun onViewAttachedToWindow(holder: ViewHolder) {
+        super.onViewAttachedToWindow(holder)
+        listener.onViewAttachedToWindow(holder.checkCompletion.isChecked, holder.taskBody.tag as Task)
     }
 
     override fun getItemCount(): Int = model.size

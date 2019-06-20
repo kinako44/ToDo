@@ -37,7 +37,7 @@ class RealmData {
 
 
     private fun createNewId(realm: Realm): Int {
-        val id =  realm.where(Task::class.java).sort("id", Sort.DESCENDING).findFirst()?.id ?: -1
+        val id =  realm.where(Task::class.java).sort(Task::id.name, Sort.DESCENDING).findFirst()?.id ?: -1
         return id + 1   // start is 0
     }
 }

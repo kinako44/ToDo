@@ -8,7 +8,6 @@ class TaskListPresenter(private val taskListView: TaskListContract.View,
                         private val repository: Repository
     ) : TaskListContract.Presenter {
 
-
     init {
         taskListView.presenter = this
     }
@@ -25,12 +24,12 @@ class TaskListPresenter(private val taskListView: TaskListContract.View,
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override fun switchTaskFontColorToGray(tag: Task) {
+        taskListView.changeFontColorToGray(tag)
+    }
 
-    override fun switchTaskFontColor(isCompleted: Boolean, tag: Task) {
-        when (isCompleted) {
-            true -> taskListView.changeFontColorToGray(tag)
-            false -> taskListView.changeFontColorToBlack(tag)
-        }
+    override fun switchTaskFontColorToBlack(tag: Task) {
+        taskListView.changeFontColorToBlack(tag)
     }
 
     override fun updateTask(task: Task) {

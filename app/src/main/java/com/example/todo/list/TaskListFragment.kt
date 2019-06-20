@@ -8,7 +8,6 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,29 +21,32 @@ import com.example.todo.data.Task
 class TaskListFragment : Fragment(), TaskListContract.View {
 
     private var columnCount = 1
-    private var listener: RecyclerStateListener? = null
+    private var listener: RecyclerViewStateListener? = null
     override lateinit var presenter: TaskListContract.Presenter
 
 
-    private var recyclerViewListener : RecyclerStateListener = object : RecyclerStateListener {
-        override fun onCheckBoxClicked(view: View, tag: Task) {
-            if (view is CheckBox) {
-                presenter.switchTaskFontColor(view.isChecked, tag)
+    private var recyclerViewStateListener: RecyclerViewStateListener = object: RecyclerViewStateListener {
+        override fun onCheckBoxClick(tag: Task) {
+            val isTaskCompleted = !tag.isCompleted
+            when (isTaskCompleted) {
+                true -> presenter.switchTaskFontColorToGray(tag)
+                false -> presenter.switchTaskFontColorToBlack(tag)
+            }
 
-                val task = Task()
-                with(task) {
-                    isCompleted = view.isChecked
-                    id = tag.id
-                }
-                presenter.updateTask(task)
+            val task = Task()
+            with(task) {
+                isCompleted = isTaskCompleted
+                id = tag.id
+            }
+            presenter.updateTask(task)
+        }
+
+        override fun onViewAttachedToWindow(isCompleted: Boolean, tag: Task) {
+            when (isCompleted) {
+                true -> presenter.switchTaskFontColorToGray(tag)
+                false -> presenter.switchTaskFontColorToBlack(tag)
             }
         }
-
-        override fun onBindViewHolder(isCompleted: Boolean, tag: Task) {
-            Log.d("onBindViewHolder", tag.toString())
-            presenter.switchTaskFontColor(isCompleted, tag)
-        }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,7 +72,7 @@ class TaskListFragment : Fragment(), TaskListContract.View {
                 }
 
                 val itemList = presenter.getTask()
-                adapter = TaskListAdapter(itemList, recyclerViewListener)
+                adapter = TaskListAdapter(itemList, recyclerViewStateListener)
             }
         }
 
@@ -104,11 +106,11 @@ class TaskListFragment : Fragment(), TaskListContract.View {
     }
 
 
-    interface RecyclerStateListener {
+    interface RecyclerViewStateListener {
 
-        fun onCheckBoxClicked(view: View, tag: Task)
+        fun onCheckBoxClick(tag: Task)
 
-        fun onBindViewHolder(isCompleted: Boolean, tag: Task)
+        fun onViewAttachedToWindow(isCompleted: Boolean, tag: Task)
 
     }
 
