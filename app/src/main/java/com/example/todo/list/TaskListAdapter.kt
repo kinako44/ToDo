@@ -33,6 +33,10 @@ class TaskListAdapter(
             checkCompletion.setOnClickListener {
                 listener.onCheckBoxClick(item)
             }
+
+            taskBody.setOnClickListener {
+                listener.onTaskClick(item)
+            }
         }
     }
 
@@ -43,7 +47,7 @@ class TaskListAdapter(
 
     override fun getItemCount(): Int = model.size
 
-    inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
+    inner class ViewHolder(private val mView: View) : RecyclerView.ViewHolder(mView) {
         val taskBody: TextView = mView.findViewById(R.id.task_body)
         val checkCompletion: CheckBox = mView.findViewById(R.id.check_completion)
 

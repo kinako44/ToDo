@@ -1,5 +1,6 @@
 package com.example.todo.list
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
@@ -16,6 +17,9 @@ import android.widget.TextView
 import com.example.todo.edit.TaskEditActivity
 import com.example.todo.R
 import com.example.todo.data.Task
+import com.example.todo.detail.TaskDetailActivity
+import com.example.todo.detail.TaskDetailFragment
+import kotlinx.android.synthetic.main.fragment_tasklist_list.*
 
 
 class TaskListFragment : Fragment(), TaskListContract.View {
@@ -25,7 +29,8 @@ class TaskListFragment : Fragment(), TaskListContract.View {
     override lateinit var presenter: TaskListContract.Presenter
 
 
-    private var recyclerViewStateListener: RecyclerViewStateListener = object: RecyclerViewStateListener {
+    private val recyclerViewStateListener: RecyclerViewStateListener = object: RecyclerViewStateListener {
+
         override fun onCheckBoxClick(tag: Task) {
             val isTaskCompleted = !tag.isCompleted
             when (isTaskCompleted) {
@@ -39,6 +44,10 @@ class TaskListFragment : Fragment(), TaskListContract.View {
                 id = tag.id
             }
             presenter.updateTask(task)
+        }
+
+        override fun onTaskClick(task: Task) {
+            presenter.showTaskDetail(task.id)
         }
 
         override fun onViewAttachedToWindow(isCompleted: Boolean, tag: Task) {
@@ -84,14 +93,40 @@ class TaskListFragment : Fragment(), TaskListContract.View {
     }
 
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        val recyclerView = view?.findViewById<RecyclerView>(R.id.list) ?: return
+        recyclerView.adapter?.notifyDataSetChanged()
+        /*
+        val position = data?.getIntExtra(TaskDetailFragment.TASK_DETAIL_ID, -1) ?: return   // position = taskId
+
+        if (requestCode == TaskDetailActivity.REQUEST_TASK_DELETE &&
+                    resultCode == Activity.RESULT_OK) {
+            recyclerView.adapter?.notifyItemRemoved(position)
+        }
+
+        if (resultCode == Activity.RESULT_CANCELED) {
+            recyclerView.adapter?.notifyItemChanged(position)
+        }
+        */
+    }
+
+
     override fun onDetach() {
         super.onDetach()
         listener = null
     }
 
-    override fun showAddTask() {
+    override fun showAddTaskUi() {
         val intent = Intent(context, TaskEditActivity::class.java)
         startActivity(intent)
+    }
+
+    override fun showTaskDetailUi(taskId: Int) {
+        val intent = Intent(context, TaskDetailActivity::class.java)
+        intent.putExtra(TaskDetailActivity.ARG_TASK_DETAIL_KEY, taskId)
+        startActivityForResult(intent, TaskDetailActivity.REQUEST_TASK_DELETE)
     }
 
     override fun changeFontColorToGray(tag: Task) {
@@ -112,11 +147,12 @@ class TaskListFragment : Fragment(), TaskListContract.View {
 
         fun onViewAttachedToWindow(isCompleted: Boolean, tag: Task)
 
+        fun onTaskClick(task: Task)
+
     }
 
     companion object {
 
-        // TODO: Customize parameter argument names
         const val ARG_COLUMN_COUNT = "column-count"
 
         // TODO: Customize parameter initialization

@@ -29,6 +29,7 @@ class TaskListActivity : AppCompatActivity(){
             realm.where(Task::class.java).findAll().deleteAllFromRealm()
         }
         */
+
         val taskListFragment = supportFragmentManager.findFragmentById(R.id.container) as TaskListFragment? ?:
                             TaskListFragment().also {
                                 supportFragmentManager

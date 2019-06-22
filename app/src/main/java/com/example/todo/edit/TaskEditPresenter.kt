@@ -17,7 +17,7 @@ class TaskEditPresenter(private val taskEditView: TaskEditContract.View,
     }
 
     override fun saveTask(task: Task) {
-        if (task.body != "") {
+        if (task.body.isNotEmpty()) {
             repository.saveTask(task)
         }
     }

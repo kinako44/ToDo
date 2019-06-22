@@ -9,7 +9,7 @@ interface TaskListContract {
 
         fun addTask()
 
-        fun showTaskDetail()
+        fun showTaskDetail(taskId: Int)
 
         fun switchTaskFontColorToGray(tag: Task)
 
@@ -23,7 +23,9 @@ interface TaskListContract {
 
     interface View: BaseView<Presenter> {
 
-        fun showAddTask()
+        fun showAddTaskUi()
+
+        fun showTaskDetailUi(taskId: Int)
 
         fun changeFontColorToGray(tag: Task)
 

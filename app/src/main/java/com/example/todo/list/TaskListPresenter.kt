@@ -17,11 +17,11 @@ class TaskListPresenter(private val taskListView: TaskListContract.View,
     }
 
     override fun addTask() {
-        taskListView.showAddTask()
+        taskListView.showAddTaskUi()
     }
 
-    override fun showTaskDetail() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun showTaskDetail(taskId: Int) {
+        taskListView.showTaskDetailUi(taskId)
     }
 
     override fun switchTaskFontColorToGray(tag: Task) {
