@@ -29,7 +29,6 @@ class TaskDetailFragment : Fragment(), TaskDetailContract.View {
 
     private val dialogClickListener = DialogInterface.OnClickListener { _, _ ->
         presenter.deleteTask()
-        showTaskListUi()
     }
 
     override fun onCreateView(

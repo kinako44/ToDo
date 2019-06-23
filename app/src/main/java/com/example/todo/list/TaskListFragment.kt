@@ -1,6 +1,5 @@
 package com.example.todo.list
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
@@ -12,14 +11,11 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
 import android.widget.TextView
 import com.example.todo.edit.TaskEditActivity
 import com.example.todo.R
 import com.example.todo.data.Task
 import com.example.todo.detail.TaskDetailActivity
-import com.example.todo.detail.TaskDetailFragment
-import kotlinx.android.synthetic.main.fragment_tasklist_list.*
 
 
 class TaskListFragment : Fragment(), TaskListContract.View {
@@ -27,7 +23,6 @@ class TaskListFragment : Fragment(), TaskListContract.View {
     private var columnCount = 1
     private var listener: RecyclerViewStateListener? = null
     override lateinit var presenter: TaskListContract.Presenter
-
 
     private val recyclerViewStateListener: RecyclerViewStateListener = object: RecyclerViewStateListener {
 
@@ -80,8 +75,8 @@ class TaskListFragment : Fragment(), TaskListContract.View {
                     else -> GridLayoutManager(context, columnCount)
                 }
 
-                val itemList = presenter.getTask()
-                adapter = TaskListAdapter(itemList, recyclerViewStateListener)
+                val itemList = presenter.getTasks()
+                adapter = TaskListAdapter(itemList, recyclerViewStateListener, autoUpdate = true)
             }
         }
 
@@ -92,12 +87,9 @@ class TaskListFragment : Fragment(), TaskListContract.View {
         return view
     }
 
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        val recyclerView = view?.findViewById<RecyclerView>(R.id.list) ?: return
-        recyclerView.adapter?.notifyDataSetChanged()
         /*
         val position = data?.getIntExtra(TaskDetailFragment.TASK_DETAIL_ID, -1) ?: return   // position = taskId
 

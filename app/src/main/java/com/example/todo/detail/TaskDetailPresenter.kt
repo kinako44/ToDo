@@ -22,6 +22,7 @@ class TaskDetailPresenter(
 
     override fun deleteTask() {
         repository.deleteTask(taskId)
+        taskDetailView.showTaskListUi()
     }
 
     override fun updateTask(description: String, state: Boolean) {

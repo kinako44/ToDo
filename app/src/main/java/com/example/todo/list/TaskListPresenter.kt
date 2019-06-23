@@ -3,6 +3,7 @@ package com.example.todo.list
 
 import com.example.todo.data.Repository
 import com.example.todo.data.Task
+import io.realm.RealmResults
 
 class TaskListPresenter(private val taskListView: TaskListContract.View,
                         private val repository: Repository
@@ -13,7 +14,7 @@ class TaskListPresenter(private val taskListView: TaskListContract.View,
     }
 
     override fun start() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     override fun addTask() {
@@ -36,7 +37,7 @@ class TaskListPresenter(private val taskListView: TaskListContract.View,
         repository.saveTask(task)
     }
 
-    override fun getTask(): List<Task> {
+    override fun getTasks(): RealmResults<Task> {
         return repository.getAllTasks()
     }
 

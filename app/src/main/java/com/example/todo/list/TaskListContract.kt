@@ -3,6 +3,7 @@ package com.example.todo.list
 import com.example.todo.BasePresenter
 import com.example.todo.BaseView
 import com.example.todo.data.Task
+import io.realm.RealmResults
 
 interface TaskListContract {
     interface Presenter: BasePresenter {
@@ -17,7 +18,7 @@ interface TaskListContract {
 
         fun updateTask(task: Task)
 
-        fun getTask(): List<Task>
+        fun getTasks(): RealmResults<Task>
 
     }
 

@@ -1,5 +1,8 @@
 package com.example.todo.data
 
+import com.example.todo.list.TaskListAdapter
+import io.realm.RealmResults
+
 
 class Repository (private val realmData: RealmData) {
 
@@ -15,7 +18,7 @@ class Repository (private val realmData: RealmData) {
         realmData.updateTask(task)
     }
 
-    fun getAllTasks(): List<Task>{
+    fun getAllTasks(): RealmResults<Task>{
         return realmData.getAllTasks()
     }
 

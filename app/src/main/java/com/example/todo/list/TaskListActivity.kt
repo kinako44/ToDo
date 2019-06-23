@@ -16,21 +16,21 @@ import io.realm.Sort
 class TaskListActivity : AppCompatActivity(){
 
     private val createNewTodoKey: Int = 1
-    private lateinit var realm: Realm
+    private lateinit var taskListFragment: TaskListFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        realm = Realm.getDefaultInstance()
-
         /*
+        val realm = Realm.getDefaultInstance()
         realm.executeTransaction {
             realm.where(Task::class.java).findAll().deleteAllFromRealm()
         }
+        realm.close()
         */
 
-        val taskListFragment = supportFragmentManager.findFragmentById(R.id.container) as TaskListFragment? ?:
+        taskListFragment = supportFragmentManager.findFragmentById(R.id.container) as TaskListFragment? ?:
                             TaskListFragment().also {
                                 supportFragmentManager
                                     .beginTransaction()
@@ -39,6 +39,7 @@ class TaskListActivity : AppCompatActivity(){
                             }
 
         TaskListPresenter(taskListFragment, Repository(RealmData()))
+
 
         /*
 
@@ -147,17 +148,6 @@ class TaskListActivity : AppCompatActivity(){
     }
 
 
-    private fun showEditDisplay() {
-        val intent = Intent(this, TaskEditActivity::class.java)
-        startActivityForResult(intent, createNewTodoKey)
-    }
-
-
-    override fun onDestroy() {
-        super.onDestroy()
-        realm.close()
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         super.onActivityResult(requestCode, resultCode, intent)
 
@@ -171,38 +161,5 @@ class TaskListActivity : AppCompatActivity(){
 
         }
     }
-
-    private fun removeItemFromRealm(id: Int) {
-        val itemList =  realm.where(Task::class.java).sort("id", Sort.DESCENDING)
-        val maxId = itemList.findFirst()!!.id
-
-        // データの削除
-        val item = itemList.equalTo("id", id).findAll()
-        realm.executeTransaction {
-            item.deleteFromRealm(0)
-        }
-
-        val updateItemList =  realm.where(Task::class.java).sort("id", Sort.ASCENDING).findAll()
-        // インデックスの更新
-        if (maxId == id) {
-            return
-        }
-        realm.executeTransaction {
-            for (index in (id + 1)..maxId) {    // removeしたidより大きいidを1減らす
-                updateItemList[index - 2]!!.id -= 1      // realmのindexはidより1小さい上にremoveで1減っているので-2
-            }
-        }
-    }
-
-    private fun moveItemInRealm(fromId: Int, toId: Int) {
-        val itemList = realm.where(Task::class.java).sort("id", Sort.ASCENDING).findAll()
-
-        realm.executeTransaction {
-            val tmpTask = itemList[toId - 1]!!.body
-            itemList[toId - 1]!!.body = itemList[fromId - 1]!!.body
-            itemList[fromId - 1]!!.body = tmpTask
-        }
-    }
-
 
 }
