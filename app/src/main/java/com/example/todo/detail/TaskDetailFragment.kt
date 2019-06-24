@@ -91,12 +91,7 @@ class TaskDetailFragment : Fragment(), TaskDetailContract.View {
     }
 
     override fun showTaskListUi() {
-        val intent = Intent()
-        intent.putExtra(TASK_DETAIL_ID, taskId)
-        activity?.apply {
-            setResult(RESULT_OK, intent)
-            finish()
-        }
+        activity?.finish()
     }
 
     override fun showDeleteDialog() {

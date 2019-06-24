@@ -21,7 +21,6 @@ import com.example.todo.detail.TaskDetailActivity
 class TaskListFragment : Fragment(), TaskListContract.View {
 
     private var columnCount = 1
-    private var listener: RecyclerViewStateListener? = null
     override lateinit var presenter: TaskListContract.Presenter
 
     private val recyclerViewStateListener: RecyclerViewStateListener = object: RecyclerViewStateListener {
@@ -85,29 +84,6 @@ class TaskListFragment : Fragment(), TaskListContract.View {
         }
 
         return view
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        /*
-        val position = data?.getIntExtra(TaskDetailFragment.TASK_DETAIL_ID, -1) ?: return   // position = taskId
-
-        if (requestCode == TaskDetailActivity.REQUEST_TASK_DELETE &&
-                    resultCode == Activity.RESULT_OK) {
-            recyclerView.adapter?.notifyItemRemoved(position)
-        }
-
-        if (resultCode == Activity.RESULT_CANCELED) {
-            recyclerView.adapter?.notifyItemChanged(position)
-        }
-        */
-    }
-
-
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
     }
 
     override fun showAddTaskUi() {

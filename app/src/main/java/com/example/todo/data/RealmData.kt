@@ -14,8 +14,8 @@ class RealmData {
     }
 
     fun getAllTasks(): RealmResults<Task> {
-        val realm = Realm.getDefaultInstance()
-        return realm.where(Task::class.java).sort(Task::id.name, Sort.ASCENDING).findAll()
+        //val realm = Realm.getDefaultInstance()
+        return RealmApplication.realm.where(Task::class.java).sort(Task::id.name, Sort.ASCENDING).findAll()
         /*
         Realm.getDefaultInstance().use { realm ->
             return realm.where(Task::class.java).sort(Task::id.name, Sort.ASCENDING).findAll()
@@ -50,18 +50,18 @@ class RealmData {
             val item = realm.where(Task::class.java).equalTo(Task::id.name, taskId).findFirst()
             realm.executeTransaction {
                 item?.deleteFromRealm()
+                updateAllId(realm)
             }
-            updateAllId(realm)
         }
+
     }
 
     private fun updateAllId(realm: Realm) {
         val list = realm.where(Task::class.java).sort(Task::id.name, Sort.ASCENDING).findAll()
-        realm.executeTransaction {
-            list.forEachIndexed { index, task ->
-                task.id = index
-            }
+        list.forEachIndexed { index, task ->
+            task.id = index
         }
+
     }
 
     private fun createNewId(realm: Realm): Int {
