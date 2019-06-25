@@ -16,7 +16,7 @@ interface TaskListContract {
 
         fun switchTaskFontColorToBlack(tag: Task)
 
-        fun updateTask(task: Task)
+        fun updateTask(taskId: Int, isCompleted: Boolean)
 
         fun getTasks(): RealmResults<Task>
 

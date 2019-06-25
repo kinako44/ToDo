@@ -33,7 +33,11 @@ class TaskListPresenter(private val taskListView: TaskListContract.View,
         taskListView.changeFontColorToBlack(tag)
     }
 
-    override fun updateTask(task: Task) {
+    override fun updateTask(taskId: Int, isCompleted: Boolean) {
+        val task = Task().also {
+            it.id = taskId
+            it.isCompleted = isCompleted
+        }
         repository.saveTask(task)
     }
 

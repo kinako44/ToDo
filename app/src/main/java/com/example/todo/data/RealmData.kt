@@ -1,6 +1,6 @@
 package com.example.todo.data
 
-import com.example.todo.list.TaskListAdapter
+
 import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.Sort
@@ -50,7 +50,7 @@ class RealmData {
             val item = realm.where(Task::class.java).equalTo(Task::id.name, taskId).findFirst()
             realm.executeTransaction {
                 item?.deleteFromRealm()
-                updateAllId(realm)
+                //updateAllId(realm)
             }
         }
 

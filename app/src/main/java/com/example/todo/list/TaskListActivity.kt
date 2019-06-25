@@ -15,7 +15,6 @@ import io.realm.Sort
 
 class TaskListActivity : AppCompatActivity(){
 
-    private val createNewTodoKey: Int = 1
     private lateinit var taskListFragment: TaskListFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -145,21 +144,6 @@ class TaskListActivity : AppCompatActivity(){
         itemTouchHelper.attachToRecyclerView(recycler)
         */
 
-    }
-
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
-        super.onActivityResult(requestCode, resultCode, intent)
-
-        if (resultCode == Activity.RESULT_OK &&
-            requestCode == createNewTodoKey &&
-            intent != null) {
-
-            val todoBody = intent.extras?.getString(TaskEditActivity.NEW_DATA_FROM_EDIT_KEY).toString()
-            Log.d("onActivityResult", todoBody)
-            if (todoBody == "") return
-
-        }
     }
 
 }

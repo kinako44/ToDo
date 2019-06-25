@@ -27,17 +27,8 @@ class TaskListFragment : Fragment(), TaskListContract.View {
 
         override fun onCheckBoxClick(tag: Task) {
             val isTaskCompleted = !tag.isCompleted
-            when (isTaskCompleted) {
-                true -> presenter.switchTaskFontColorToGray(tag)
-                false -> presenter.switchTaskFontColorToBlack(tag)
-            }
-
-            val task = Task()
-            with(task) {
-                isCompleted = isTaskCompleted
-                id = tag.id
-            }
-            presenter.updateTask(task)
+            switchTaskFontColor(isTaskCompleted, tag)
+            presenter.updateTask(tag.id, isTaskCompleted)
         }
 
         override fun onTaskClick(task: Task) {
@@ -45,10 +36,7 @@ class TaskListFragment : Fragment(), TaskListContract.View {
         }
 
         override fun onViewAttachedToWindow(isCompleted: Boolean, tag: Task) {
-            when (isCompleted) {
-                true -> presenter.switchTaskFontColorToGray(tag)
-                false -> presenter.switchTaskFontColorToBlack(tag)
-            }
+            switchTaskFontColor(isCompleted, tag)
         }
     }
 
@@ -86,6 +74,13 @@ class TaskListFragment : Fragment(), TaskListContract.View {
         return view
     }
 
+    private fun switchTaskFontColor(isCompleted: Boolean, tag: Task) {
+        when (isCompleted) {
+            true -> presenter.switchTaskFontColorToGray(tag)
+            false -> presenter.switchTaskFontColorToBlack(tag)
+        }
+    }
+
     override fun showAddTaskUi() {
         val intent = Intent(context, TaskEditActivity::class.java)
         startActivity(intent)
@@ -94,7 +89,7 @@ class TaskListFragment : Fragment(), TaskListContract.View {
     override fun showTaskDetailUi(taskId: Int) {
         val intent = Intent(context, TaskDetailActivity::class.java)
         intent.putExtra(TaskDetailActivity.ARG_TASK_DETAIL_KEY, taskId)
-        startActivityForResult(intent, TaskDetailActivity.REQUEST_TASK_DELETE)
+        startActivity(intent)
     }
 
     override fun changeFontColorToGray(tag: Task) {
