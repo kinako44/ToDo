@@ -16,6 +16,8 @@ interface TaskDetailContract{
 
         fun onDeleteMenuClick()
 
+        fun destroy()
+
     }
 
     interface View : BaseView<Presenter> {

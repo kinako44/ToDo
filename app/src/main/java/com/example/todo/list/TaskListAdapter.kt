@@ -10,14 +10,12 @@ import com.example.todo.R
 
 
 import com.example.todo.data.Task
-import io.realm.Realm
-import io.realm.RealmChangeListener
 import io.realm.RealmRecyclerViewAdapter
 import io.realm.RealmResults
 
 
 class TaskListAdapter(
-    private val model: RealmResults<Task>,  // RealmResults<Task>
+    private val model: RealmResults<Task>,
     private val listener: TaskListFragment.RecyclerViewStateListener,
     autoUpdate: Boolean
 ) : RealmRecyclerViewAdapter<Task, TaskListAdapter.ViewHolder>(model, autoUpdate) {
@@ -35,9 +33,9 @@ class TaskListAdapter(
         with(holder) {
             taskBody.text = item!!.body
             taskBody.tag = item
-            checkCompletion.isChecked = item.isCompleted
+            check.isChecked = item.isCompleted
 
-            checkCompletion.setOnClickListener {
+            check.setOnClickListener {
                 listener.onCheckBoxClick(item)
             }
 
@@ -51,12 +49,12 @@ class TaskListAdapter(
 
     override fun onViewAttachedToWindow(holder: ViewHolder) {
         super.onViewAttachedToWindow(holder)
-        listener.onViewAttachedToWindow(holder.checkCompletion.isChecked, holder.taskBody.tag as Task)
+        listener.onViewAttachedToWindow(holder.check.isChecked, holder.taskBody.tag as Task)
     }
 
-    inner class ViewHolder(private val mView: View) : RecyclerView.ViewHolder(mView) {
+    inner class ViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
         val taskBody: TextView = mView.findViewById(R.id.task_body)
-        val checkCompletion: CheckBox = mView.findViewById(R.id.check_completion)
+        val check: CheckBox = mView.findViewById(R.id.check_completion)
 
     }
 

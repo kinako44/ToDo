@@ -8,6 +8,8 @@ interface TaskEditContract {
 
     interface Presenter : BasePresenter {
         fun saveTask(task: Task)
+
+        fun destroy()
     }
 
     interface View : BaseView<Presenter> {

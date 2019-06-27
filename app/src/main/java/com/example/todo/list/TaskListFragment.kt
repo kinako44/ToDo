@@ -45,6 +45,7 @@ class TaskListFragment : Fragment(), TaskListContract.View {
 
         arguments?.let {
             columnCount = it.getInt(ARG_COLUMN_COUNT)
+
         }
     }
 
@@ -52,9 +53,8 @@ class TaskListFragment : Fragment(), TaskListContract.View {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_tasklist_list, container, false)
 
-        // Set the adapter
+        val view = inflater.inflate(R.layout.fragment_tasklist_list, container, false)
         if (view is RecyclerView) {
             with(view) {
                 layoutManager = when {
@@ -74,6 +74,11 @@ class TaskListFragment : Fragment(), TaskListContract.View {
         return view
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        presenter.destroy()
+    }
+
     private fun switchTaskFontColor(isCompleted: Boolean, tag: Task) {
         when (isCompleted) {
             true -> presenter.switchTaskFontColorToGray(tag)
@@ -88,7 +93,7 @@ class TaskListFragment : Fragment(), TaskListContract.View {
 
     override fun showTaskDetailUi(taskId: Int) {
         val intent = Intent(context, TaskDetailActivity::class.java)
-        intent.putExtra(TaskDetailActivity.ARG_TASK_DETAIL_KEY, taskId)
+        intent.putExtra(TaskDetailActivity.TASK_DETAIL_KEY, taskId)
         startActivity(intent)
     }
 
@@ -118,7 +123,6 @@ class TaskListFragment : Fragment(), TaskListContract.View {
 
         const val ARG_COLUMN_COUNT = "column-count"
 
-        // TODO: Customize parameter initialization
         @JvmStatic
         fun newInstance(columnCount: Int) =
             TaskListFragment().apply {

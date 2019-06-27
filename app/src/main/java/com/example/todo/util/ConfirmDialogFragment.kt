@@ -6,7 +6,7 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import com.example.todo.R
-import com.example.todo.detail.TaskDetailFragment
+
 
 class ConfirmDialogFragment : DialogFragment(){
     var listener: DialogInterface.OnClickListener? = null

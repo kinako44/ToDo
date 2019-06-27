@@ -10,10 +10,7 @@ import com.example.todo.data.RealmData
 import com.example.todo.data.Repository
 import kotlinx.android.synthetic.main.activity_edit_to_do.*
 
-class TaskEditActivity : AppCompatActivity(), TaskEditFragment.OnFragmentInteractionListener {
-    override fun onFragmentInteraction(uri: Uri) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+class TaskEditActivity : AppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,12 +25,5 @@ class TaskEditActivity : AppCompatActivity(), TaskEditFragment.OnFragmentInterac
         }
 
         TaskEditPresenter(taskEditFragment, Repository(RealmData()))
-
     }
-
-    companion object {
-        const val NEW_DATA_FROM_EDIT_KEY = "NEW_DATA_FROM_EDIT_KEY"
-    }
-
-
 }

@@ -5,16 +5,21 @@ import com.example.todo.data.Repository
 import com.example.todo.data.Task
 import io.realm.RealmResults
 
-class TaskListPresenter(private val taskListView: TaskListContract.View,
-                        private val repository: Repository
+class TaskListPresenter(
+    private val taskListView: TaskListContract.View,
+    private val repository: Repository
     ) : TaskListContract.Presenter {
+
 
     init {
         taskListView.presenter = this
     }
 
     override fun start() {
+    }
 
+    override fun destroy() {
+        repository.onDestroy()
     }
 
     override fun addTask() {

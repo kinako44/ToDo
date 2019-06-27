@@ -20,6 +20,7 @@ interface TaskListContract {
 
         fun getTasks(): RealmResults<Task>
 
+        fun destroy()
     }
 
     interface View: BaseView<Presenter> {

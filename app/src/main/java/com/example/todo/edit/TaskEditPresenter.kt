@@ -4,8 +4,9 @@ import com.example.todo.data.Repository
 import com.example.todo.data.Task
 
 
-class TaskEditPresenter(private val taskEditView: TaskEditContract.View,
-                        private val repository: Repository)
+class TaskEditPresenter(
+    private val taskEditView: TaskEditContract.View,
+    private val repository: Repository)
     : TaskEditContract.Presenter {
 
     init {
@@ -13,7 +14,6 @@ class TaskEditPresenter(private val taskEditView: TaskEditContract.View,
     }
 
     override fun start() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun saveTask(task: Task) {
@@ -22,6 +22,9 @@ class TaskEditPresenter(private val taskEditView: TaskEditContract.View,
         }
     }
 
+    override fun destroy() {
+        repository.onDestroy()
+    }
 
 }
 

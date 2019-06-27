@@ -28,17 +28,20 @@ class TaskDetailPresenter(
     override fun updateTask(description: String, state: Boolean) {
         repository.getTask(taskId) ?: return
 
-        val task = Task()
-        with(task) {
-            body = description
-            isCompleted = state
-            id = taskId
+        Task().also {
+            it.body = description
+            it.isCompleted = state
+            it.id = taskId
+            repository.saveTask(it)
         }
-        repository.saveTask(task)
     }
 
     override fun onDeleteMenuClick() {
         taskDetailView.showDeleteDialog()
+    }
+
+    override fun destroy() {
+        repository.onDestroy()
     }
 
 

@@ -1,6 +1,5 @@
 package com.example.todo.data
 
-import com.example.todo.list.TaskListAdapter
 import io.realm.RealmResults
 
 
@@ -12,7 +11,7 @@ class Repository (private val realmData: RealmData) {
 
     fun saveTask(task: Task) {
         if (task.id < 0) {
-            realmData.saveTask(task)
+            realmData.createTask(task)
             return
         }
         realmData.updateTask(task)
@@ -26,5 +25,8 @@ class Repository (private val realmData: RealmData) {
         realmData.deleteTask(taskId)
     }
 
+    fun onDestroy() {
+        realmData.closeRealm()
+    }
 
 }

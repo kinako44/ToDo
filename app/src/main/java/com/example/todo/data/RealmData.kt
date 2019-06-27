@@ -5,66 +5,54 @@ import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.Sort
 
-class RealmData {
+class RealmData{
 
-    fun getTask(taskId: Int) : Task?{
-        Realm.getDefaultInstance().use { realm ->
-            return realm.where(Task::class.java).equalTo(Task::id.name, taskId).findFirst()
-        }
+    private val realm: Realm = Realm.getDefaultInstance()
+
+    fun closeRealm() {
+        realm.close()
     }
 
-    fun getAllTasks(): RealmResults<Task> {
-        //val realm = Realm.getDefaultInstance()
-        return RealmApplication.realm.where(Task::class.java).sort(Task::id.name, Sort.ASCENDING).findAll()
-        /*
-        Realm.getDefaultInstance().use { realm ->
-            return realm.where(Task::class.java).sort(Task::id.name, Sort.ASCENDING).findAll()
-        }
-        */
-    }
+    fun getTask(taskId: Int) : Task? =
+        realm.where(Task::class.java).equalTo(Task::id.name, taskId).findFirst()
 
-    fun saveTask(task: Task) {
-        Realm.getDefaultInstance().use { realm ->
-            realm.executeTransaction {
-                task.id = createNewId(realm)
-                realm.copyToRealm(task)
-            }
+
+    fun getAllTasks(): RealmResults<Task> =
+        realm.where(Task::class.java).sort(Task::id.name, Sort.ASCENDING).findAll()
+
+
+    fun createTask(task: Task) {
+        realm.executeTransaction {
+            task.id = createNewId()
+            realm.copyToRealm(task)
         }
     }
-
 
     fun updateTask(task: Task) {
-        Realm.getDefaultInstance().use { realm ->
-            val item = realm.where(Task::class.java).equalTo(Task::id.name, task.id).findFirst()
-            realm.executeTransaction {
-                if (task.body.isNotEmpty()) {
-                    item?.body = task.body
-                }
-                item?.isCompleted = task.isCompleted
+        val item = realm.where(Task::class.java).equalTo(Task::id.name, task.id).findFirst()
+        realm.executeTransaction {
+            if (task.body.isNotEmpty()) {
+                item?.body = task.body
             }
+            item?.isCompleted = task.isCompleted
         }
     }
 
     fun deleteTask(taskId: Int) {
-        Realm.getDefaultInstance().use { realm ->
-            val item = realm.where(Task::class.java).equalTo(Task::id.name, taskId).findFirst()
-            realm.executeTransaction {
-                item?.deleteFromRealm()
-                //updateAllId(realm)
-            }
+        val item = realm.where(Task::class.java).equalTo(Task::id.name, taskId).findFirst()
+        realm.executeTransaction {
+            item?.deleteFromRealm()
         }
 
     }
 
-    private fun updateAllId(realm: Realm) {
-        val list = realm.where(Task::class.java).sort(Task::id.name, Sort.ASCENDING).findAll()
-        list.forEachIndexed { index, task ->
-            task.id = index
+    fun deleteAllTasks() {
+        realm.executeTransaction {
+            realm.where(Task::class.java).findAll().deleteAllFromRealm()
         }
-
     }
 
-    private fun createNewId(realm: Realm): Int {
+    private fun createNewId(): Int {
         val id =  realm.where(Task::class.java).sort(Task::id.name, Sort.DESCENDING).findFirst()?.id ?: -1
         return id + 1   // start is 0
     }

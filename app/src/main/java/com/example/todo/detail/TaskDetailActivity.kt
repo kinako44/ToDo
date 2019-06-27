@@ -5,9 +5,6 @@ import android.support.v7.app.AppCompatActivity
 import com.example.todo.R
 import com.example.todo.data.RealmData
 import com.example.todo.data.Repository
-import com.example.todo.list.TaskListFragment
-
-import kotlinx.android.synthetic.main.activity_task_detail.*
 
 class TaskDetailActivity : AppCompatActivity() {
     private val defaultTaskId = -1
@@ -16,7 +13,7 @@ class TaskDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task_detail)
 
-        val taskId = intent.getIntExtra(ARG_TASK_DETAIL_KEY, defaultTaskId)
+        val taskId = intent.getIntExtra(TASK_DETAIL_KEY, defaultTaskId)
         if (taskId == defaultTaskId) {
             finish()
         }
@@ -35,8 +32,7 @@ class TaskDetailActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val ARG_TASK_DETAIL_KEY = "ARG_TASK_DETAIL_KEY"
-        const val REQUEST_TASK_DELETE = 1
+        const val TASK_DETAIL_KEY = "TASK_DETAIL_KEY"
     }
 
 }

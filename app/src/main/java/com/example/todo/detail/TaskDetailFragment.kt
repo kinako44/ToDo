@@ -1,25 +1,16 @@
 package com.example.todo.detail
 
-import android.app.Activity
-import android.app.Activity.RESULT_OK
-import android.app.AlertDialog
-import android.app.Dialog
 import android.content.DialogInterface
-import android.content.Intent
 import android.support.v4.app.Fragment
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.util.Log
+
 import android.view.*
 import android.widget.CheckBox
 import android.widget.EditText
 import com.example.todo.R
-import com.example.todo.data.Task
 import com.example.todo.util.ConfirmDialogFragment
 
-/**
- * A placeholder fragment containing a simple view.
- */
+
 class TaskDetailFragment : Fragment(), TaskDetailContract.View {
 
     private var taskId = -1
@@ -55,11 +46,12 @@ class TaskDetailFragment : Fragment(), TaskDetailContract.View {
         presenter.start()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         val description = description.text.toString()
         val state = check.isChecked
         presenter.updateTask(description, state)
+        presenter.destroy()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
