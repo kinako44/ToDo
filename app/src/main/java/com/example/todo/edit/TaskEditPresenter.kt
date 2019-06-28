@@ -16,10 +16,19 @@ class TaskEditPresenter(
     override fun start() {
     }
 
-    override fun saveTask(task: Task) {
-        if (task.body.isNotEmpty()) {
-            repository.saveTask(task)
+    override fun saveTask(description: String) {
+        if (description.isNotEmpty()) {
+            Task().also {
+                it.body = description
+                it.isCompleted = false
+                repository.saveTask(it)
+            }
+
         }
+    }
+
+    override fun datePick() {
+        taskEditView.showDatePicker()
     }
 
     override fun destroy() {

@@ -10,13 +10,14 @@ import android.view.ViewGroup
 import android.widget.EditText
 
 import com.example.todo.R
-import com.example.todo.data.Task
+import com.example.todo.util.DatePickerFragment
 
 class TaskEditFragment : Fragment(), TaskEditContract.View {
 
     override lateinit var presenter: TaskEditContract.Presenter
     private lateinit var saveButton: CardView
     private lateinit var taskInput: EditText
+    private lateinit var deadlineButton: CardView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,26 +29,28 @@ class TaskEditFragment : Fragment(), TaskEditContract.View {
         with(root) {
             taskInput = findViewById(R.id.task_input)
             saveButton = findViewById(R.id.task_input_complete)
+            deadlineButton = findViewById(R.id.setting_deadline)
+        }
+
+        saveButton.setOnClickListener {
+            presenter.saveTask(taskInput.text.toString())
+            activity?.finish()
+        }
+
+        deadlineButton.setOnClickListener {
+            showDatePicker()
         }
 
         return root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        saveButton.setOnClickListener {
-            Task().also {
-                it.body = taskInput.text.toString()
-                presenter.saveTask(it)
-            }
-            activity?.finish()
-        }
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         presenter.destroy()
+    }
+
+    override fun showDatePicker() {
+        DatePickerFragment().show(fragmentManager, "DataPicker")
     }
 
 

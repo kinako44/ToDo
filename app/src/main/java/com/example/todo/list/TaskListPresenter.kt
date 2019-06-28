@@ -39,11 +39,11 @@ class TaskListPresenter(
     }
 
     override fun updateTask(taskId: Int, isCompleted: Boolean) {
-        val task = Task().also {
+        Task().also {
             it.id = taskId
             it.isCompleted = isCompleted
+            repository.saveTask(it)
         }
-        repository.saveTask(task)
     }
 
     override fun getTasks(): RealmResults<Task> {

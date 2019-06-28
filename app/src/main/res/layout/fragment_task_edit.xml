@@ -40,14 +40,14 @@
                 android:hint="@string/input_plan"
                 android:textSize="18sp"
                 tools:layout_conversion_absoluteHeight="45dp"
-                tools:layout_conversion_absoluteWidth="363dp" app:layout_constraintBottom_toTopOf="@+id/cardView"
+                tools:layout_conversion_absoluteWidth="363dp" app:layout_constraintBottom_toTopOf="@+id/setting_deadline"
                 android:layout_marginStart="8dp" app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginEnd="8dp" app:layout_constraintEnd_toStartOf="@+id/task_input_complete"
                 android:layout_marginBottom="8dp" android:background="@android:color/background_light"/>
         <android.support.v7.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/cardView" app:cardBackgroundColor="#E8EAF6"
+                android:id="@+id/setting_deadline" app:cardBackgroundColor="#E8EAF6"
                 app:cardCornerRadius="12dp"
                 tools:layout_conversion_absoluteHeight="288dp"
                 tools:layout_conversion_absoluteWidth="133dp" app:layout_constraintBottom_toBottomOf="parent"

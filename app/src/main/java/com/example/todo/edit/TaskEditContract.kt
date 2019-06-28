@@ -7,12 +7,15 @@ import com.example.todo.data.Task
 interface TaskEditContract {
 
     interface Presenter : BasePresenter {
-        fun saveTask(task: Task)
+        fun saveTask(description: String)
+
+        fun datePick()
 
         fun destroy()
     }
 
     interface View : BaseView<Presenter> {
+        fun showDatePicker()
 
     }
 }
