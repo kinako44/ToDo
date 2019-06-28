@@ -23,7 +23,7 @@ class TaskListFragment : Fragment(), TaskListContract.View {
     private var columnCount = 1
     override lateinit var presenter: TaskListContract.Presenter
 
-    private val recyclerViewStateListener: RecyclerViewStateListener = object: RecyclerViewStateListener {
+    private val stateListener: TaskListAdapter.StateListener = object: TaskListAdapter.StateListener {
 
         override fun onCheckBoxClick(tag: Task) {
             val isTaskCompleted = !tag.isCompleted
@@ -63,7 +63,7 @@ class TaskListFragment : Fragment(), TaskListContract.View {
                 }
 
                 val itemList = presenter.getTasks()
-                adapter = TaskListAdapter(itemList, recyclerViewStateListener, autoUpdate = true)
+                adapter = TaskListAdapter(itemList, stateListener, autoUpdate = true)
             }
         }
 
@@ -106,17 +106,6 @@ class TaskListFragment : Fragment(), TaskListContract.View {
     override fun changeFontColorToBlack(tag: Task) {
         val textView = view?.findViewWithTag<TextView>(tag) ?: return
         textView.setTextColor(ContextCompat.getColor(context!!, R.color.colorFontPrimary))
-    }
-
-
-    interface RecyclerViewStateListener {
-
-        fun onCheckBoxClick(tag: Task)
-
-        fun onViewAttachedToWindow(isCompleted: Boolean, tag: Task)
-
-        fun onTaskClick(task: Task)
-
     }
 
     companion object {

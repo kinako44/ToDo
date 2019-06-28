@@ -16,7 +16,7 @@ import io.realm.RealmResults
 
 class TaskListAdapter(
     private val model: RealmResults<Task>,
-    private val listener: TaskListFragment.RecyclerViewStateListener,
+    private val listener: StateListener,
     autoUpdate: Boolean
 ) : RealmRecyclerViewAdapter<Task, TaskListAdapter.ViewHolder>(model, autoUpdate) {
 
@@ -55,6 +55,16 @@ class TaskListAdapter(
     inner class ViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
         val taskBody: TextView = mView.findViewById(R.id.task_body)
         val check: CheckBox = mView.findViewById(R.id.check_completion)
+
+    }
+
+    interface StateListener {
+
+        fun onCheckBoxClick(tag: Task)
+
+        fun onViewAttachedToWindow(isCompleted: Boolean, tag: Task)
+
+        fun onTaskClick(task: Task)
 
     }
 
