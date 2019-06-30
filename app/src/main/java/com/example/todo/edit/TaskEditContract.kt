@@ -2,7 +2,6 @@ package com.example.todo.edit
 
 import com.example.todo.BasePresenter
 import com.example.todo.BaseView
-import com.example.todo.data.Task
 
 interface TaskEditContract {
 
@@ -12,10 +11,22 @@ interface TaskEditContract {
         fun datePick()
 
         fun destroy()
+
+        fun setDeadline()
+
+        fun removeDeadline()
     }
 
     interface View : BaseView<Presenter> {
         fun showDatePicker()
+
+        fun showDeadlineCancel()
+
+        fun showDeadline()
+
+        fun hideDeadlineCancel()
+
+        fun hideDeadline()
 
     }
 }

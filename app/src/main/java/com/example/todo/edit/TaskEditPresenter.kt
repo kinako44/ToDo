@@ -35,5 +35,15 @@ class TaskEditPresenter(
         repository.onDestroy()
     }
 
+    override fun setDeadline() {
+        taskEditView.showDeadline()
+        taskEditView.showDeadlineCancel()
+    }
+
+    override fun removeDeadline() {
+        taskEditView.hideDeadline()
+        taskEditView.hideDeadlineCancel()
+    }
+
 }
 
