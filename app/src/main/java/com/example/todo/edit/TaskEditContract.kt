@@ -6,7 +6,7 @@ import com.example.todo.BaseView
 interface TaskEditContract {
 
     interface Presenter : BasePresenter {
-        fun saveTask(description: String)
+        fun saveTask(description: String, deadline: String?)
 
         fun datePick()
 

@@ -11,8 +11,8 @@ class RealmApplication : Application() {
         Realm.init(this)
 
         // warning! Realmのモデルを更新した際、データベースが初期化される
-        // val config = RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build()
-        // Realm.setDefaultConfiguration(config)
+        val config = RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build()
+        Realm.setDefaultConfiguration(config)
 
     }
 

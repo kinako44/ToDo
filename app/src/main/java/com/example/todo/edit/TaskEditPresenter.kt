@@ -16,11 +16,12 @@ class TaskEditPresenter(
     override fun start() {
     }
 
-    override fun saveTask(description: String) {
+    override fun saveTask(description: String, deadline: String?) {
         if (description.isNotEmpty()) {
             Task().also {
                 it.body = description
                 it.isCompleted = false
+                it.deadline = deadline
                 repository.saveTask(it)
             }
 

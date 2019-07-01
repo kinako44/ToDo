@@ -14,4 +14,6 @@
     <string name="delete">削除</string>
     <string name="cancel">キャンセル</string>
     <string name="delete_dialog">削除しますか？</string>
+    <string name="deadline">期限 : </string>
+    <string name="format_date">M月d日(E)</string>
 </resources>

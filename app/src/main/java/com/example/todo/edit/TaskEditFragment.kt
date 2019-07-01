@@ -53,7 +53,7 @@ class TaskEditFragment : Fragment(), TaskEditContract.View {
         }
 
         saveButton.setOnClickListener {
-            presenter.saveTask(taskInput.text.toString())
+            presenter.saveTask(taskInput.text.toString(), deadlineDate)
             activity?.finish()
         }
 
@@ -85,7 +85,7 @@ class TaskEditFragment : Fragment(), TaskEditContract.View {
     override fun showDatePicker() {
         DatePickerFragment().also {
             it.show(fragmentManager, "DataPicker")
-            it.setOnDataSelectListener(dateSelectListener)
+            it.setOnDateSelectListener(dateSelectListener)
         }
     }
 

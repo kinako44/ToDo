@@ -8,4 +8,5 @@ open class Task : RealmObject() {
     var body: String = ""
     var isCompleted: Boolean = false
     var id: Int = -1         // start is 0
+    var deadline: String? = null
 }

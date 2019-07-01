@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.widget.DatePicker
+import com.example.todo.R
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -31,14 +32,14 @@ class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener{
         listener = null
     }
 
-    fun setOnDataSelectListener(onDateSelectListener: OnDateSelectListener) {
+    fun setOnDateSelectListener(onDateSelectListener: OnDateSelectListener) {
         listener = onDateSelectListener
     }
 
     private fun transformDateFormat(year: Int, month: Int, dayOfMonth: Int): String {
         val calendar = Calendar.getInstance()
         calendar.set(year, month, dayOfMonth)
-        val format = SimpleDateFormat("yyyy/MM/dd", Locale.JAPAN)
+        val format = SimpleDateFormat(getString(R.string.format_date), Locale.JAPAN)
         return format.format(calendar.time)
     }
 

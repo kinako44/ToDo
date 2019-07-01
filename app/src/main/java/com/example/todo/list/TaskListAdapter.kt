@@ -34,6 +34,7 @@ class TaskListAdapter(
             taskBody.text = item!!.body
             taskBody.tag = item
             check.isChecked = item.isCompleted
+            deadline.text = item.deadline
 
             check.setOnClickListener {
                 listener.onCheckBoxClick(item)
@@ -55,6 +56,7 @@ class TaskListAdapter(
     inner class ViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
         val taskBody: TextView = mView.findViewById(R.id.task_body)
         val check: CheckBox = mView.findViewById(R.id.check_completion)
+        val deadline: TextView = mView.findViewById(R.id.deadline)
 
     }
 
